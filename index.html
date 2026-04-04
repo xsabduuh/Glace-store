@@ -1,664 +1,693 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Glacé — Premium Ice Cream</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Glacé — Crème Glacée Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ─── RESET & TOKENS ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-:root {
-–cream:    #FFF8F0;
-–blush:    #F9D5C8;
-–rose:     #E8A598;
-–mint:     #C8E6D4;
-–choc:     #5C3A1E;
-–choc-mid: #A0644A;
-–vanilla:  #F5E6C8;
-–sky:      #D4E9F7;
-–text:     #2D1B0E;
-–muted:    #9B7B6A;
-–white:    #FFFFFF;
-–shadow:   rgba(92,58,30,0.12);
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-font-family: ‘DM Sans’, sans-serif;
-background: var(–cream);
-color: var(–text);
-overflow-x: hidden;
+:root{
+–cream:#FFF8F0;
+–blush:#F9D5C8;
+–rose:#E8836A;
+–rose-lt:#F0A898;
+–mint:#C8E6D4;
+–choc:#3D2010;
+–choc-md:#7A4A2A;
+–choc-lt:#C8885A;
+–van:#F5E6C8;
+–sky:#D4E9F7;
+–text:#2D1B0E;
+–muted:#9B7B6A;
+–sh:rgba(61,32,16,.13);
 }
 
-/* ── NAVBAR ── */
-nav {
-position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-display: flex; align-items: center; justify-content: space-between;
-padding: 20px 6vw;
-background: rgba(255,248,240,0.82);
-backdrop-filter: blur(18px);
--webkit-backdrop-filter: blur(18px);
-border-bottom: 1px solid rgba(232,165,152,0.18);
-transition: box-shadow .3s;
-}
-nav.scrolled { box-shadow: 0 4px 32px var(–shadow); }
-
-.nav-logo {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.55rem;
-font-weight: 700;
-color: var(–choc);
-display: flex; align-items: center; gap: 8px;
-text-decoration: none;
-}
-.nav-logo span { font-style: italic; color: var(–rose); }
-.nav-logo .cone { font-size: 1.4rem; }
-
-.nav-links {
-display: flex; gap: 2.2rem; list-style: none;
-}
-.nav-links a {
-text-decoration: none; color: var(–muted); font-size: .93rem; font-weight: 500;
-position: relative; transition: color .25s;
-}
-.nav-links a::after {
-content: ‘’; position: absolute; bottom: -3px; left: 0; right: 0;
-height: 2px; background: var(–rose); border-radius: 2px;
-transform: scaleX(0); transition: transform .25s;
-}
-.nav-links a:hover { color: var(–choc); }
-.nav-links a:hover::after { transform: scaleX(1); }
-
-.nav-right { display: flex; align-items: center; gap: 1.2rem; }
-.cart-btn {
-position: relative; background: none; border: none; cursor: pointer;
-font-size: 1.3rem; color: var(–choc); transition: transform .2s;
-}
-.cart-btn:hover { transform: scale(1.15) rotate(-5deg); }
-.cart-badge {
-position: absolute; top: -6px; right: -8px;
-background: var(–rose); color: #fff;
-font-size: .62rem; font-weight: 700;
-width: 17px; height: 17px; border-radius: 50%;
-display: flex; align-items: center; justify-content: center;
+html{scroll-behavior:smooth}
+body{
+font-family:‘DM Sans’,sans-serif;
+background:var(–cream);
+color:var(–text);
+overflow-x:hidden;
+cursor:none;
 }
 
-/* ── HERO ── */
-.hero {
-min-height: 100vh;
-display: grid; grid-template-columns: 1fr 1fr;
-align-items: center;
-padding: 120px 6vw 80px;
-position: relative; overflow: hidden;
-}
+/* ─── CURSOR ─── */
+#cur,#cur-ring{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);border-radius:50%}
+#cur{width:12px;height:12px;background:var(–rose);transition:width .25s,height .25s,background .25s}
+#cur-ring{width:38px;height:38px;border:1.5px solid var(–rose);opacity:.45;z-index:9998;transition:width .3s,height .3s,opacity .3s}
+body:has(a:hover) #cur,body:has(button:hover) #cur{width:22px;height:22px;background:var(–choc-lt)}
+body:has(a:hover) #cur-ring,body:has(button:hover) #cur-ring{width:54px;height:54px;opacity:.2}
 
-/* gradient mesh background */
-.hero::before {
-content: ‘’;
-position: absolute; inset: 0;
+/* ─── LOADER ─── */
+#loader{
+position:fixed;inset:0;z-index:9000;
+background:var(–choc);
+display:flex;align-items:center;justify-content:center;
+flex-direction:column;gap:1.4rem;
+transition:opacity .7s ease,visibility .7s ease;
+}
+#loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+.ld-logo{font-family:‘Playfair Display’,serif;color:var(–blush);font-size:2.6rem;font-style:italic;letter-spacing:-.02em}
+.ld-bar{width:160px;height:2px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.ld-fill{height:100%;background:linear-gradient(90deg,var(–rose-lt),var(–blush));border-radius:2px;animation:ldFill 1s ease forwards}
+@keyframes ldFill{from{width:0}to{width:100%}}
+
+/* ─── NAVBAR ─── */
+nav{
+position:fixed;top:0;left:0;right:0;z-index:500;
+display:flex;align-items:center;justify-content:space-between;
+padding:20px 5vw;
+background:rgba(255,248,240,0);
+backdrop-filter:blur(0px);
+transition:background .5s,backdrop-filter .5s,box-shadow .5s,padding .4s;
+}
+nav.solid{
+background:rgba(255,248,240,.9);
+backdrop-filter:blur(22px);
+-webkit-backdrop-filter:blur(22px);
+box-shadow:0 2px 36px var(–sh);
+padding:14px 5vw;
+}
+.nav-logo{
+font-family:‘Playfair Display’,serif;
+font-size:1.65rem;font-weight:700;
+color:var(–choc);text-decoration:none;
+letter-spacing:-.02em;display:flex;align-items:center;gap:4px;
+}
+.nav-logo .dot{color:var(–rose)}
+.nav-links{display:flex;gap:2.2rem;list-style:none}
+.nav-links a{
+text-decoration:none;color:var(–muted);
+font-size:.88rem;font-weight:500;letter-spacing:.01em;
+position:relative;transition:color .22s;
+}
+.nav-links a::after{
+content:’’;position:absolute;bottom:-4px;left:0;right:0;
+height:1.5px;background:var(–rose);border-radius:2px;
+transform:scaleX(0);transform-origin:left;
+transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.nav-links a:hover{color:var(–choc)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+
+/* cart button */
+.cart-btn{
+position:relative;background:var(–choc);border:none;cursor:pointer;
+width:46px;height:46px;border-radius:15px;
+display:flex;align-items:center;justify-content:center;
+color:#fff;transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .22s;
+box-shadow:0 5px 18px rgba(61,32,16,.32);
+}
+.cart-btn:hover{transform:scale(1.13) rotate(-6deg);background:var(–rose)}
+.cart-btn svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cart-badge{
+position:absolute;top:-7px;right:-7px;
+background:var(–rose);color:#fff;
+font-size:.58rem;font-weight:900;
+min-width:19px;height:19px;border-radius:10px;
+display:flex;align-items:center;justify-content:center;
+padding:0 4px;
+box-shadow:0 3px 10px rgba(232,131,106,.6);
+border:2px solid var(–cream);
+transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.cart-badge.pop{transform:scale(1.6)}
+
+/* ─── TOAST ─── */
+#toast{
+position:fixed;bottom:2rem;left:50%;
+transform:translateX(-50%) translateY(90px);
+background:var(–choc);color:#fff;
+padding:14px 24px;border-radius:100px;
+font-size:.88rem;font-weight:600;
+display:flex;align-items:center;gap:9px;
+box-shadow:0 12px 44px rgba(61,32,16,.4);
+z-index:800;
+transition:transform .55s cubic-bezier(.34,1.56,.64,1),opacity .4s;
+opacity:0;white-space:nowrap;
+}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+#toast svg{width:17px;height:17px;flex-shrink:0;stroke:var(–rose-lt);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* ─── HERO ─── */
+.hero{
+min-height:100vh;
+display:grid;grid-template-columns:1fr 1fr;
+align-items:center;
+padding:130px 5vw 80px;
+position:relative;overflow:hidden;gap:2rem;
+}
+.hero-bg{
+position:absolute;inset:0;z-index:0;
 background:
-radial-gradient(ellipse 60% 55% at 70% 40%, #F9D5C8 0%, transparent 65%),
-radial-gradient(ellipse 50% 50% at 20% 80%, #C8E6D4 0%, transparent 60%),
-radial-gradient(ellipse 40% 40% at 85% 80%, #D4E9F7 0%, transparent 55%),
+radial-gradient(ellipse 65% 60% at 72% 36%,#F9D5C8 0%,transparent 66%),
+radial-gradient(ellipse 48% 48% at 12% 80%,#C8E6D4 0%,transparent 58%),
+radial-gradient(ellipse 36% 36% at 90% 78%,#D4E9F7 0%,transparent 52%),
 var(–cream);
-z-index: 0;
+}
+.hero-bg::after{
+content:’’;position:absolute;inset:0;
+background-image:url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 512 512’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=’.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23n)’ opacity=’.05’/%3E%3C/svg%3E”);
+opacity:.5;pointer-events:none;
 }
 
-.hero-content {
-position: relative; z-index: 2;
-animation: fadeSlideUp .9s ease both;
+/* hero content reveals */
+.hero-content{position:relative;z-index:2}
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .85s cubic-bezier(.4,0,.2,1),transform .85s cubic-bezier(.4,0,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal:nth-child(1){transition-delay:.02s}
+.reveal:nth-child(2){transition-delay:.13s}
+.reveal:nth-child(3){transition-delay:.24s}
+.reveal:nth-child(4){transition-delay:.35s}
+.reveal:nth-child(5){transition-delay:.46s}
+.reveal:nth-child(6){transition-delay:.57s}
+
+/* badge */
+.badge-pill{
+display:inline-flex;align-items:center;gap:7px;
+background:rgba(232,131,106,.13);
+border:1px solid rgba(232,131,106,.32);
+color:var(–rose);font-size:.73rem;font-weight:700;
+padding:6px 14px;border-radius:100px;
+letter-spacing:.08em;text-transform:uppercase;
+margin-bottom:1.4rem;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(–rose);animation:blink 1.6s ease infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+.hero h1{
+font-family:‘Playfair Display’,serif;
+font-size:clamp(2.5rem,5vw,4rem);
+line-height:1.1;color:var(–choc);
+margin-bottom:1.1rem;letter-spacing:-.025em;
+}
+.hero h1 em{font-style:italic;color:var(–rose)}
+.hero-desc{
+color:var(–muted);font-size:1rem;line-height:1.74;
+max-width:400px;margin-bottom:1.9rem;font-weight:400;
 }
 
-.hero-tag {
-display: inline-flex; align-items: center; gap: 6px;
-background: rgba(232,165,152,0.22);
-border: 1px solid rgba(232,165,152,0.4);
-color: var(–choc-mid); font-size: .8rem; font-weight: 600;
-padding: 6px 14px; border-radius: 100px; margin-bottom: 1.4rem;
-letter-spacing: .04em; text-transform: uppercase;
+/* price */
+.price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:1.8rem;flex-wrap:wrap}
+.price-main{
+font-family:‘Playfair Display’,serif;
+font-size:2.9rem;font-weight:700;color:var(–choc);line-height:1;
+}
+.price-currency{font-size:1.4rem;vertical-align:super}
+.price-old{color:var(–muted);font-size:1.08rem;text-decoration:line-through}
+.price-badge{
+background:linear-gradient(135deg,var(–rose),#B84530);
+color:#fff;font-size:.68rem;font-weight:900;
+padding:4px 11px;border-radius:100px;
+letter-spacing:.05em;
+box-shadow:0 4px 14px rgba(232,131,106,.45);
 }
 
-.hero h1 {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(2.4rem, 5vw, 3.8rem);
-line-height: 1.12;
-color: var(–choc);
-margin-bottom: 1rem;
+/* qty */
+.qty-row{display:flex;align-items:center;gap:1.2rem;margin-bottom:2rem;flex-wrap:wrap}
+.qty-label{font-size:.78rem;font-weight:700;color:var(–muted);letter-spacing:.06em;text-transform:uppercase}
+.qty-ctrl{
+display:flex;align-items:center;
+background:#fff;border-radius:100px;
+border:1.5px solid rgba(61,32,16,.1);
+box-shadow:0 4px 16px var(–sh);overflow:hidden;
 }
-.hero h1 em {
-font-style: italic; color: var(–rose);
+.qty-btn{
+background:none;border:none;cursor:pointer;
+width:42px;height:42px;font-size:1.25rem;
+color:var(–choc);font-weight:700;
+display:flex;align-items:center;justify-content:center;
+transition:background .2s,transform .15s;user-select:none;
 }
+.qty-btn:hover{background:var(–blush)}
+.qty-btn:active{transform:scale(.85)}
+.qty-n{
+min-width:36px;text-align:center;
+font-weight:800;font-size:1rem;color:var(–choc);
+transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.qty-n.bump{transform:scale(1.4)}
 
-.hero-desc {
-color: var(–muted); font-size: 1rem; line-height: 1.7;
-max-width: 400px; margin-bottom: 1.8rem;
-font-weight: 400;
+/* CTA */
+.cta-row{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{
+display:inline-flex;align-items:center;gap:8px;
+background:var(–choc);color:#fff;
+border:none;cursor:pointer;
+font-family:‘DM Sans’,sans-serif;font-size:.93rem;font-weight:700;
+padding:16px 32px;border-radius:100px;
+position:relative;overflow:hidden;
+box-shadow:0 8px 32px rgba(61,32,16,.32);
+transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .35s;
 }
+.btn-primary::before{
+content:’’;
+position:absolute;top:0;left:-100%;width:60%;height:100%;
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+transition:left .55s;
+}
+.btn-primary:hover{transform:translateY(-5px);box-shadow:0 18px 44px rgba(61,32,16,.4)}
+.btn-primary:hover::before{left:160%}
+.btn-primary:active{transform:translateY(-1px)}
+.btn-primary svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-.hero-price-row {
-display: flex; align-items: baseline; gap: 10px; margin-bottom: 1.8rem;
+.btn-outline{
+display:inline-flex;align-items:center;gap:7px;
+background:transparent;
+border:2px solid rgba(61,32,16,.18);color:var(–choc-md);
+cursor:pointer;font-family:‘DM Sans’,sans-serif;
+font-size:.93rem;font-weight:600;
+padding:14px 26px;border-radius:100px;
+transition:border-color .25s,background .25s,color .25s,transform .35s cubic-bezier(.34,1.56,.64,1);
 }
-.hero-price {
-font-family: ‘Playfair Display’, serif;
-font-size: 2.4rem; font-weight: 700; color: var(–choc);
-}
-.hero-price-old {
-font-size: 1.1rem; color: var(–muted);
-text-decoration: line-through;
-}
-.price-badge {
-background: var(–rose); color: #fff;
-font-size: .72rem; font-weight: 700; padding: 3px 9px;
-border-radius: 100px; letter-spacing: .04em;
-}
+.btn-outline:hover{border-color:var(–rose);background:rgba(232,131,106,.07);color:var(–rose);transform:translateY(-4px)}
+.btn-outline svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* Quantity selector */
-.qty-row {
-display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;
-flex-wrap: wrap;
-}
-.qty-label { font-size: .85rem; font-weight: 600; color: var(–muted); }
-.qty-control {
-display: flex; align-items: center; gap: 0;
-background: #fff; border-radius: 100px;
-border: 1.5px solid rgba(92,58,30,0.12);
-box-shadow: 0 2px 10px var(–shadow);
-overflow: hidden;
-}
-.qty-btn {
-background: none; border: none; cursor: pointer;
-width: 38px; height: 38px; font-size: 1.1rem;
-color: var(–choc); font-weight: 700;
-transition: background .2s;
-display: flex; align-items: center; justify-content: center;
-}
-.qty-btn:hover { background: var(–blush); }
-.qty-num {
-min-width: 32px; text-align: center;
-font-weight: 700; font-size: .95rem; color: var(–choc);
-}
+/* ─── HERO VISUAL ─── */
+.hero-visual{position:relative;z-index:2;display:flex;align-items:center;justify-content:center}
+.stage{position:relative;width:440px;height:520px;display:flex;align-items:center;justify-content:center}
 
-.cta-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+.disc{
+position:absolute;
+width:368px;height:368px;border-radius:50%;
+background:radial-gradient(circle at 38% 35%,#FDEAE2,#F7CDBC 55%,#EDBAAA);
+box-shadow:0 0 0 28px rgba(249,213,200,.22),0 0 0 58px rgba(249,213,200,.08),0 32px 80px rgba(232,131,106,.28);
+animation:discFloat 6s ease-in-out infinite;
+}
+@keyframes discFloat{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.04) translateY(-13px)}}
 
-.btn-primary {
-background: var(–choc);
-color: #fff; border: none; cursor: pointer;
-font-family: ‘DM Sans’, sans-serif;
-font-size: .95rem; font-weight: 600;
-padding: 15px 32px; border-radius: 100px;
-position: relative; overflow: hidden;
-transition: transform .25s, box-shadow .25s;
-box-shadow: 0 6px 28px rgba(92,58,30,0.28);
+.product-img-wrap{position:relative;z-index:3;animation:cupFloat 5s ease-in-out infinite}
+@keyframes cupFloat{
+0%,100%{transform:translateY(0) rotate(0deg)}
+38%{transform:translateY(-20px) rotate(1.6deg)}
+72%{transform:translateY(-9px) rotate(-.7deg)}
 }
-.btn-primary::after {
-content: ‘’;
-position: absolute; inset: 0;
-background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
-opacity: 0; transition: opacity .25s;
-}
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(92,58,30,0.38); }
-.btn-primary:hover::after { opacity: 1; }
-.btn-primary:active { transform: translateY(0); }
-
-.btn-secondary {
-background: transparent; border: 2px solid var(–rose);
-color: var(–rose); cursor: pointer;
-font-family: ‘DM Sans’, sans-serif;
-font-size: .95rem; font-weight: 600;
-padding: 13px 28px; border-radius: 100px;
-transition: background .25s, color .25s, transform .25s;
-}
-.btn-secondary:hover {
-background: var(–rose); color: #fff; transform: translateY(-3px);
-}
-
-/* ── HERO VISUAL ── */
-.hero-visual {
-position: relative; z-index: 2;
-display: flex; align-items: center; justify-content: center;
-animation: fadeSlideUp .9s .15s ease both;
-}
-
-.product-stage {
-position: relative; width: 420px; height: 500px;
-display: flex; align-items: center; justify-content: center;
-}
-
-/* big soft disc behind cup */
-.disc {
-position: absolute;
-width: 340px; height: 340px; border-radius: 50%;
-background: radial-gradient(circle at 38% 38%, #FDEAE2, #F9D5C8 60%, #F0BFAF);
+.product-img{
+width:265px;height:325px;object-fit:cover;
+border-radius:50% 50% 46% 54% / 44% 46% 54% 56%;
 box-shadow:
-0 30px 80px rgba(232,165,152,0.4),
-inset 0 -20px 40px rgba(200,100,80,0.1);
-animation: floatDisc 5s ease-in-out infinite;
+0 32px 72px rgba(61,32,16,.26),
+0 0 0 9px rgba(255,255,255,.72),
+0 0 0 18px rgba(249,213,200,.36);
+display:block;
+transition:border-radius .6s;
+}
+.product-img:hover{border-radius:30%}
+
+/* floating food blobs */
+.floater{
+position:absolute;z-index:4;
+animation:blob var(–d,4s) var(–dl,0s) ease-in-out infinite;
+filter:drop-shadow(0 6px 14px rgba(0,0,0,.14));
+}
+.floater img{
+display:block;border-radius:50%;object-fit:cover;
+width:var(–sz,52px);height:var(–sz,52px);
+box-shadow:0 4px 12px rgba(0,0,0,.12),0 0 0 3px rgba(255,255,255,.5);
+}
+.f1{top:7%;left:6%;–d:4.2s;–dl:.0s;–sz:58px}
+.f2{top:13%;right:7%;–d:3.8s;–dl:.5s;–sz:48px}
+.f3{top:52%;right:2%;–d:5.0s;–dl:.3s;–sz:60px}
+.f4{bottom:11%;left:3%;–d:4.0s;–dl:.8s;–sz:44px}
+.f5{bottom:23%;right:11%;–d:4.5s;–dl:.2s;–sz:52px}
+.f6{top:33%;left:1%;–d:3.5s;–dl:.7s;–sz:42px}
+@keyframes blob{
+0%,100%{transform:translateY(0) rotate(0deg) scale(1)}
+33%{transform:translateY(-15px) rotate(9deg) scale(1.08)}
+66%{transform:translateY(-7px) rotate(-5deg) scale(.96)}
 }
 
-.cup-wrapper {
-position: relative; z-index: 3;
-animation: floatCup 4.5s ease-in-out infinite;
+/* info pills */
+.pill{
+position:absolute;z-index:5;
+background:rgba(255,255,255,.88);
+backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+border:1px solid rgba(232,131,106,.2);
+border-radius:18px;box-shadow:0 10px 34px var(–sh);
 }
+.pill-rating{
+bottom:20px;left:-18px;
+padding:14px 18px;
+display:flex;align-items:center;gap:12px;
+animation:pillPop .8s .8s cubic-bezier(.34,1.56,.64,1) both;
+}
+.stars{color:#F5A623;font-size:.98rem;letter-spacing:-1px}
+.pill-rt strong{display:block;color:var(–choc);font-weight:800;font-size:.92rem}
+.pill-rt span{color:var(–muted);font-size:.73rem}
+.pill-orders{
+top:34px;right:-14px;
+padding:12px 18px;
+background:var(–choc);
+animation:pillPop .8s .95s cubic-bezier(.34,1.56,.64,1) both;
+}
+.pill-orders strong{display:block;font-size:1.25rem;font-weight:900;color:#fff}
+.pill-orders span{font-size:.73rem;color:rgba(255,255,255,.6)}
+@keyframes pillPop{from{opacity:0;transform:scale(.5) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
 
-/* CSS-drawn ice cream cup */
-.ice-cream-svg {
-width: 240px; height: 320px;
-filter: drop-shadow(0 20px 40px rgba(92,58,30,0.28));
-}
+/* ─── WAVE ─── */
+.wave{line-height:0}
+.wave svg{display:block;width:100%}
 
-/* floating blobs */
-.floater {
-position: absolute; font-size: 2rem;
-animation: floatBlob var(–dur, 4s) var(–delay, 0s) ease-in-out infinite;
-opacity: .9; z-index: 4;
-filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
-}
-.floater:nth-child(1)  { top: 6%; left: 8%;   –dur:4.2s; –delay:0s;   font-size:2.4rem; }
-.floater:nth-child(2)  { top: 12%; right: 10%; –dur:3.8s; –delay:.6s;  font-size:1.8rem; }
-.floater:nth-child(3)  { top: 55%; right: 4%;  –dur:5s;   –delay:.3s;  font-size:2.2rem; }
-.floater:nth-child(4)  { bottom: 10%; left: 5%; –dur:4s;  –delay:.9s;  font-size:1.5rem; }
-.floater:nth-child(5)  { bottom: 20%; right: 14%; –dur:4.5s; –delay:.2s; font-size:2rem; }
-.floater:nth-child(6)  { top: 34%; left: 2%;   –dur:3.5s; –delay:.7s;  font-size:1.6rem; }
+/* ─── PRODUCTS ─── */
+.products{padding:90px 5vw 110px;position:relative}
 
-/* rating pill */
-.hero-rating {
-position: absolute; bottom: 24px; left: -20px; z-index: 5;
-background: rgba(255,255,255,0.85);
-backdrop-filter: blur(10px);
-border: 1px solid rgba(232,165,152,0.25);
-border-radius: 16px;
-padding: 12px 18px;
-display: flex; align-items: center; gap: 10px;
-box-shadow: 0 8px 28px var(–shadow);
-animation: fadeSlideUp 1s .4s ease both;
+.sec-head{text-align:center;margin-bottom:3.5rem}
+.sec-head h2{
+font-family:‘Playfair Display’,serif;
+font-size:clamp(1.9rem,3.5vw,2.8rem);
+color:var(–choc);margin-bottom:.5rem;letter-spacing:-.02em;
 }
-.rating-stars { color: #F5A623; font-size: 1rem; letter-spacing: -1px; }
-.rating-text { font-size: .78rem; }
-.rating-text strong { display: block; color: var(–choc); font-weight: 700; font-size: .9rem; }
-.rating-text span { color: var(–muted); }
+.sec-head p{color:var(–muted);font-size:.96rem}
 
-/* orders pill */
-.orders-pill {
-position: absolute; top: 40px; right: -10px; z-index: 5;
-background: var(–choc);
-color: #fff; border-radius: 14px;
-padding: 10px 16px; font-size: .78rem; font-weight: 600;
-box-shadow: 0 6px 20px rgba(92,58,30,0.3);
-animation: fadeSlideUp 1s .55s ease both;
-}
-.orders-pill span { display: block; font-size: 1.1rem; font-weight: 800; }
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem;max-width:960px;margin:0 auto}
 
-/* ── PRODUCT CARDS ── */
-.products {
-padding: 80px 6vw 100px;
-position: relative; z-index: 2;
+.card{
+border-radius:28px;overflow:hidden;
+position:relative;cursor:pointer;
+transition:transform .48s cubic-bezier(.2,.8,.2,1),box-shadow .48s;
 }
+.card:hover{transform:translateY(-14px) scale(1.025)}
+.card-choc{background:linear-gradient(155deg,#F7EDE5,#EDD5C2);box-shadow:0 8px 40px rgba(160,100,74,.18)}
+.card-straw{background:linear-gradient(155deg,#FDEEEF,#FAD5D9);box-shadow:0 8px 40px rgba(230,140,145,.18)}
+.card-van{background:linear-gradient(155deg,#FBF6E8,#F5EBC9);box-shadow:0 8px 40px rgba(200,160,80,.15)}
+.card-choc:hover{box-shadow:0 24px 60px rgba(160,100,74,.33)}
+.card-straw:hover{box-shadow:0 24px 60px rgba(230,140,145,.33)}
+.card-van:hover{box-shadow:0 24px 60px rgba(200,160,80,.3)}
 
-.section-header {
-text-align: center; margin-bottom: 3rem;
+/* shine sweep */
+.card::after{
+content:’’;position:absolute;inset:0;
+background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.32) 50%,transparent 65%);
+transform:translateX(-120%) skewX(-15deg);
+transition:transform .75s cubic-bezier(.4,0,.2,1);
+pointer-events:none;
 }
-.section-header h2 {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-color: var(–choc); margin-bottom: .5rem;
-}
-.section-header p {
-color: var(–muted); font-size: .95rem;
-}
+.card:hover::after{transform:translateX(160%) skewX(-15deg)}
 
-.cards-grid {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 1.6rem;
-max-width: 900px; margin: 0 auto;
+.card-img-wrap{height:210px;overflow:hidden;position:relative}
+.card-img-wrap img{
+width:100%;height:100%;object-fit:cover;
+transition:transform .58s cubic-bezier(.2,.8,.2,1);
+display:block;
 }
+.card:hover .card-img-wrap img{transform:scale(1.11)}
 
-.card {
-border-radius: 28px; padding: 32px 28px;
-position: relative; overflow: hidden;
-cursor: pointer;
-transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
-animation: fadeSlideUp .8s ease both;
+.card-body{padding:22px 24px 20px}
+.card-flavor{
+font-family:‘Playfair Display’,serif;
+font-size:1.22rem;font-weight:700;color:var(–choc);margin-bottom:.3rem;
 }
-.card:nth-child(1) { animation-delay: .1s; }
-.card:nth-child(2) { animation-delay: .2s; }
-.card:nth-child(3) { animation-delay: .3s; }
+.card-note{font-size:.8rem;color:var(–muted);line-height:1.56;margin-bottom:1.1rem}
+.card-foot{display:flex;align-items:center;justify-content:space-between}
+.card-price{
+font-family:‘Playfair Display’,serif;
+font-size:1.55rem;font-weight:700;color:var(–choc);
+}
+.card-price sub{font-size:.68rem;font-family:‘DM Sans’,sans-serif;font-weight:700;vertical-align:baseline;margin-left:2px}
 
-.card:hover { transform: translateY(-10px); }
+.card-add-btn{
+width:42px;height:42px;border-radius:50%;
+border:none;cursor:pointer;
+display:flex;align-items:center;justify-content:center;
+transition:transform .38s cubic-bezier(.34,1.56,.64,1),filter .2s;
+color:#fff;flex-shrink:0;
+}
+.card-choc  .card-add-btn{background:var(–choc-md);box-shadow:0 4px 14px rgba(122,74,42,.4)}
+.card-straw .card-add-btn{background:#D86575;box-shadow:0 4px 14px rgba(216,101,117,.4)}
+.card-van   .card-add-btn{background:#B8923A;box-shadow:0 4px 14px rgba(184,146,58,.4)}
+.card-add-btn:hover{transform:scale(1.2) rotate(90deg);filter:brightness(1.1)}
+.card-add-btn svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
 
-/* card themes */
-.card-choc {
-background: linear-gradient(145deg, #F5EDE6, #EDD5C5);
-box-shadow: 0 8px 40px rgba(160,100,74,0.18);
-}
-.card-choc:hover { box-shadow: 0 20px 60px rgba(160,100,74,0.3); }
+/* ─── SCROLL REVEAL ─── */
+.sr{opacity:0;transform:translateY(42px);transition:opacity .85s cubic-bezier(.4,0,.2,1),transform .85s cubic-bezier(.4,0,.2,1)}
+.sr.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.08s}.d2{transition-delay:.18s}.d3{transition-delay:.28s}
 
-.card-straw {
-background: linear-gradient(145deg, #FDEEF0, #FAD5D8);
-box-shadow: 0 8px 40px rgba(230,140,145,0.18);
+/* ─── FOOTER ─── */
+footer{
+background:var(–choc);color:rgba(255,255,255,.55);
+text-align:center;padding:24px 5vw;
+font-size:.82rem;letter-spacing:.04em;
 }
-.card-straw:hover { box-shadow: 0 20px 60px rgba(230,140,145,0.3); }
+footer span{color:var(–blush)}
 
-.card-van {
-background: linear-gradient(145deg, #FBF6E8, #F5EBC9);
-box-shadow: 0 8px 40px rgba(200,160,80,0.15);
+/* ─── RESPONSIVE ─── */
+@media(max-width:960px){
+.hero{grid-template-columns:1fr;text-align:center;padding-top:110px;gap:3rem}
+.hero-content{order:2}
+.hero-visual{order:1}
+.hero-desc,.qty-row,.cta-row{justify-content:center;margin-left:auto;margin-right:auto}
+.hero-desc{max-width:100%}
+.stage{width:320px;height:380px}
+.disc{width:260px;height:260px}
+.product-img{width:185px;height:228px}
+.pill-rating{left:0}
+.cards{grid-template-columns:1fr;max-width:340px}
 }
-.card-van:hover { box-shadow: 0 20px 60px rgba(200,160,80,0.28); }
-
-.card-img {
-font-size: 4.5rem; text-align: center; margin-bottom: 1.2rem;
-display: block;
-transition: transform .35s;
-filter: drop-shadow(0 8px 16px rgba(0,0,0,0.12));
-}
-.card:hover .card-img { transform: scale(1.1) rotate(-3deg); }
-
-.card-flavor {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.25rem; font-weight: 700; color: var(–choc);
-margin-bottom: .3rem;
-}
-.card-note {
-font-size: .82rem; color: var(–muted); margin-bottom: 1.1rem; line-height: 1.5;
-}
-.card-footer {
-display: flex; align-items: center; justify-content: space-between;
-}
-.card-price {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.5rem; font-weight: 700; color: var(–choc);
-}
-.card-add {
-width: 38px; height: 38px; border-radius: 50%;
-border: none; cursor: pointer; font-size: 1.2rem;
-display: flex; align-items: center; justify-content: center;
-transition: transform .25s, filter .25s;
-}
-.card-choc .card-add  { background: var(–choc-mid); color: #fff; }
-.card-straw .card-add { background: #E88B92; color: #fff; }
-.card-van .card-add   { background: #C9A84C; color: #fff; }
-.card-add:hover { transform: scale(1.15) rotate(90deg); filter: brightness(1.1); }
-
-/* card shine overlay */
-.card::before {
-content: ‘’;
-position: absolute; top: -50%; left: -60%;
-width: 60%; height: 200%;
-background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.28) 50%, transparent 60%);
-transform: skewX(-20deg);
-transition: left .6s;
-}
-.card:hover::before { left: 120%; }
-
-/* ── FOOTER STRIP ── */
-.footer-strip {
-background: var(–choc);
-color: rgba(255,255,255,0.7);
-text-align: center;
-padding: 20px;
-font-size: .82rem;
-letter-spacing: .03em;
-}
-.footer-strip span { color: var(–blush); }
-
-/* ── ANIMATIONS ── */
-@keyframes fadeSlideUp {
-from { opacity: 0; transform: translateY(28px); }
-to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes floatCup {
-0%, 100% { transform: translateY(0) rotate(0deg); }
-50%       { transform: translateY(-14px) rotate(1.5deg); }
-}
-@keyframes floatDisc {
-0%, 100% { transform: scale(1) translateY(0); }
-50%       { transform: scale(1.03) translateY(-8px); }
-}
-@keyframes floatBlob {
-0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-33%       { transform: translateY(-12px) rotate(6deg) scale(1.05); }
-66%       { transform: translateY(-6px) rotate(-4deg) scale(0.97); }
-}
-
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-.hero {
-grid-template-columns: 1fr;
-text-align: center;
-padding-top: 110px;
-gap: 3rem;
-}
-.hero-content { order: 2; }
-.hero-visual  { order: 1; }
-.hero-desc { margin: 0 auto 1.8rem; }
-.qty-row, .cta-row { justify-content: center; }
-.product-stage { width: 300px; height: 360px; }
-.disc { width: 240px; height: 240px; }
-.ice-cream-svg { width: 170px; height: 230px; }
-.hero-rating { left: 0; }
-.cards-grid { grid-template-columns: 1fr; max-width: 340px; }
-}
-@media (max-width: 600px) {
-nav { padding: 16px 5vw; }
-.nav-links { display: none; }
-.hero { padding: 100px 5vw 60px; }
+@media(max-width:600px){
+nav{padding:14px 5vw}
+.nav-links{display:none}
+body{cursor:auto}
+#cur,#cur-ring{display:none}
 }
 </style>
 
 </head>
 <body>
 
-<!-- ── NAVBAR ── -->
+<!-- CURSOR -->
 
-<nav id="navbar">
-  <a href="#" class="nav-logo"><span class="cone">🍦</span> Glac<span>é</span></a>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- LOADER -->
+
+<div id="loader">
+  <div class="ld-logo">Glacé</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+</div>
+
+<!-- TOAST -->
+
+<div id="toast">
+  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toast-msg">Ajouté au panier !</span>
+</div>
+
+<!-- ─── NAVBAR ─── -->
+
+<nav id="nav">
+  <a href="#" class="nav-logo">Glac<span class="dot">é</span></a>
   <ul class="nav-links">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Shop</a></li>
-    <li><a href="#">Flavors</a></li>
-    <li><a href="#">About</a></li>
+    <li><a href="#">Accueil</a></li>
+    <li><a href="#">Boutique</a></li>
+    <li><a href="#">Saveurs</a></li>
+    <li><a href="#">À propos</a></li>
     <li><a href="#">Contact</a></li>
   </ul>
   <div class="nav-right">
-    <button class="cart-btn" id="cartBtn" title="Cart">
-      🛒
-      <span class="cart-badge" id="cartBadge">0</span>
+    <button class="cart-btn" id="cartBtn" title="Panier">
+      <!-- shopping bag icon -->
+      <svg viewBox="0 0 24 24">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span class="cart-badge" id="badge">0</span>
     </button>
   </div>
 </nav>
 
-<!-- ── HERO ── -->
+<!-- ─── HERO ─── -->
 
 <section class="hero">
-  <!-- Content -->
+  <div class="hero-bg"></div>
+
+  <!-- LEFT: Content -->
+
   <div class="hero-content">
-    <div class="hero-tag">✨ New Summer Collection</div>
-    <h1>Find your<br><em>perfect</em> ice cream<br>flavor.</h1>
-    <p class="hero-desc">
-      Handcrafted with the finest ingredients. Every scoop is a journey of indulgence — from first taste to the very last drop.
-    </p>
+    <div class="badge-pill reveal"><span class="badge-dot"></span> Nouvelle Collection Été 2025</div>
 
 ```
-<div class="hero-price-row">
-  <span class="hero-price">$6.90</span>
-  <span class="hero-price-old">$8.50</span>
-  <span class="price-badge">19% OFF</span>
+<h1 class="reveal">
+  Trouvez votre<br>saveur <em>parfaite</em><br>de glace.
+</h1>
+
+<p class="hero-desc reveal">
+  Artisanale avec les meilleurs ingrédients du monde. Chaque boule est un voyage — de la première bouchée jusqu'à la dernière.
+</p>
+
+<div class="price-row reveal">
+  <span class="price-main"><span class="price-currency">د.م.</span> 69</span>
+  <span class="price-old">85 د.م.</span>
+  <span class="price-badge">−19%</span>
 </div>
 
-<div class="qty-row">
-  <span class="qty-label">Qty:</span>
-  <div class="qty-control">
-    <button class="qty-btn" id="qtyMinus">−</button>
-    <span class="qty-num" id="qtyNum">1</span>
-    <button class="qty-btn" id="qtyPlus">+</button>
+<div class="qty-row reveal">
+  <span class="qty-label">Qté :</span>
+  <div class="qty-ctrl">
+    <button class="qty-btn" id="qMinus">−</button>
+    <span class="qty-n" id="qNum">1</span>
+    <button class="qty-btn" id="qPlus">+</button>
   </div>
 </div>
 
-<div class="cta-row">
-  <button class="btn-primary" id="orderBtn">🛒 Order Now</button>
-  <button class="btn-secondary">Explore Flavors</button>
+<div class="cta-row reveal">
+  <button class="btn-primary" id="orderBtn">
+    <svg viewBox="0 0 24 24">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
+    </svg>
+    Commander maintenant
+  </button>
+  <button class="btn-outline">
+    <svg viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/>
+      <path d="m21 21-4.35-4.35"/>
+    </svg>
+    Voir les saveurs
+  </button>
 </div>
 ```
 
   </div>
 
-  <!-- Visual -->
+  <!-- RIGHT: Visual -->
 
   <div class="hero-visual">
-    <div class="product-stage">
-      <!-- floating decorations -->
-      <div class="floater">🍓</div>
-      <div class="floater">🍫</div>
-      <div class="floater">🫐</div>
-      <div class="floater">🌸</div>
-      <div class="floater">🍒</div>
-      <div class="floater">✨</div>
+    <div class="stage">
 
 ```
+  <!-- floating ingredient photos -->
+  <div class="floater f1">
+    <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=120&q=80&fit=crop&crop=center" alt="strawberry">
+  </div>
+  <div class="floater f2">
+    <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=120&q=80&fit=crop&crop=center" alt="chocolate">
+  </div>
+  <div class="floater f3">
+    <img src="https://images.unsplash.com/photo-1528821128474-27f963b062bf?w=120&q=80&fit=crop&crop=center" alt="cherry">
+  </div>
+  <div class="floater f4">
+    <img src="https://images.unsplash.com/photo-1454348939926-e8d64d9d04b6?w=120&q=80&fit=crop&crop=center" alt="blueberry">
+  </div>
+  <div class="floater f5">
+    <img src="https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=120&q=80&fit=crop&crop=center" alt="waffle cone">
+  </div>
+  <div class="floater f6">
+    <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=120&q=80&fit=crop&crop=center" alt="mint">
+  </div>
+
   <div class="disc"></div>
 
-  <div class="cup-wrapper">
-    <!-- Inline SVG ice cream cup -->
-    <svg class="ice-cream-svg" viewBox="0 0 240 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Waffle cone / cup body -->
-      <path d="M72 190 L108 290 Q120 308 132 290 L168 190 Z" fill="url(#coneGrad)" />
-      <!-- cone grid lines -->
-      <path d="M80 205 L122 285 M90 207 L128 280 M100 206 L133 274 M110 204 L138 268 M120 203 L143 262 M130 203 L148 256 M140 203 L153 250 M150 204 L158 245 M160 205 L163 240" stroke="rgba(140,80,40,0.25)" stroke-width="1.2" />
-      <path d="M72 195 L95 255 M78 198 L86 222 M100 250 L115 283 M125 260 L136 283 M142 254 L148 268 M155 245 L160 258" stroke="rgba(140,80,40,0.15)" stroke-width="1" />
-
-      <!-- Cup rim -->
-      <ellipse cx="120" cy="190" rx="50" ry="10" fill="url(#rimGrad)" />
-
-      <!-- Scoop 3 – back (strawberry) -->
-      <ellipse cx="120" cy="148" rx="46" ry="44" fill="url(#scoop3Grad)" />
-      <!-- highlight -->
-      <ellipse cx="105" cy="135" rx="14" ry="10" fill="rgba(255,255,255,0.28)" />
-
-      <!-- Scoop 2 – middle (chocolate) -->
-      <ellipse cx="120" cy="118" rx="42" ry="40" fill="url(#scoop2Grad)" />
-      <ellipse cx="106" cy="107" rx="12" ry="9" fill="rgba(255,255,255,0.22)" />
-
-      <!-- Scoop 1 – top (vanilla) -->
-      <ellipse cx="120" cy="90" rx="38" ry="36" fill="url(#scoop1Grad)" />
-      <ellipse cx="107" cy="80" rx="11" ry="8" fill="rgba(255,255,255,0.32)" />
-
-      <!-- Drips -->
-      <path d="M150 112 Q158 118 154 130 Q150 140 155 148" stroke="url(#dripGrad)" stroke-width="5" stroke-linecap="round" fill="none" />
-      <path d="M88 120 Q80 128 83 140" stroke="rgba(200,150,100,0.6)" stroke-width="4" stroke-linecap="round" fill="none" />
-
-      <!-- Cherry on top -->
-      <circle cx="120" cy="56" r="10" fill="url(#cherryGrad)" />
-      <path d="M120 56 Q124 44 132 38" stroke="#5C3A1E" stroke-width="2" stroke-linecap="round" fill="none" />
-      <circle cx="120" cy="56" r="4" fill="rgba(255,255,255,0.3)" />
-
-      <!-- Sprinkles on top scoop -->
-      <rect x="108" y="77" width="8" height="3" rx="1.5" fill="#E88B92" transform="rotate(-20 108 77)" />
-      <rect x="128" y="73" width="8" height="3" rx="1.5" fill="#6BBFD4" transform="rotate(15 128 73)" />
-      <rect x="118" y="67" width="7" height="3" rx="1.5" fill="#C9A84C" transform="rotate(-5 118 67)" />
-      <rect x="104" y="90" width="8" height="3" rx="1.5" fill="#A8D8A8" transform="rotate(30 104 90)" />
-      <rect x="133" y="88" width="7" height="3" rx="1.5" fill="#E88B92" transform="rotate(-25 133 88)" />
-
-      <!-- Gradients -->
-      <defs>
-        <linearGradient id="coneGrad" x1="120" y1="190" x2="120" y2="310" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#D4935A"/>
-          <stop offset="100%" stop-color="#A0644A"/>
-        </linearGradient>
-        <radialGradient id="rimGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#E8B080"/>
-          <stop offset="100%" stop-color="#C07840"/>
-        </radialGradient>
-        <radialGradient id="scoop3Grad" cx="40%" cy="38%" r="60%">
-          <stop offset="0%" stop-color="#FAB8C4"/>
-          <stop offset="60%" stop-color="#F08090"/>
-          <stop offset="100%" stop-color="#D86070"/>
-        </radialGradient>
-        <radialGradient id="scoop2Grad" cx="40%" cy="38%" r="60%">
-          <stop offset="0%" stop-color="#8B5E3C"/>
-          <stop offset="60%" stop-color="#5C3A1E"/>
-          <stop offset="100%" stop-color="#3D2510"/>
-        </radialGradient>
-        <radialGradient id="scoop1Grad" cx="42%" cy="38%" r="60%">
-          <stop offset="0%" stop-color="#FBF0D0"/>
-          <stop offset="60%" stop-color="#F5DFA0"/>
-          <stop offset="100%" stop-color="#E8C870"/>
-        </radialGradient>
-        <linearGradient id="dripGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
-          <stop offset="0%" stop-color="#8B5E3C" stop-opacity=".9"/>
-          <stop offset="100%" stop-color="#5C3A1E" stop-opacity=".5"/>
-        </linearGradient>
-        <radialGradient id="cherryGrad" cx="40%" cy="35%" r="60%">
-          <stop offset="0%" stop-color="#FF6B6B"/>
-          <stop offset="100%" stop-color="#C0392B"/>
-        </radialGradient>
-      </defs>
-    </svg>
+  <div class="product-img-wrap">
+    <!-- Main hero product image -->
+    <img class="product-img"
+      src="https://images.unsplash.com/photo-1567206563114-c179706e6b3d?w=700&q=85&fit=crop&crop=center"
+      alt="Crème glacée premium"
+      onerror="this.src='https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=700&q=85&fit=crop'">
   </div>
 
-  <!-- Floating pills -->
-  <div class="hero-rating">
-    <div>
-      <div class="rating-stars">★★★★★</div>
-    </div>
-    <div class="rating-text">
+  <!-- rating pill -->
+  <div class="pill pill-rating">
+    <div class="stars">★★★★★</div>
+    <div class="pill-rt">
       <strong>4.9 / 5</strong>
-      <span>2,400+ reviews</span>
+      <span>2 400+ avis</span>
     </div>
   </div>
 
-  <div class="orders-pill">
-    <span>12k+</span>
-    Happy Customers
+  <!-- orders pill -->
+  <div class="pill pill-orders">
+    <strong>12k+</strong>
+    <span>Clients satisfaits</span>
   </div>
+
 </div>
 ```
 
   </div>
 </section>
 
-<!-- ── PRODUCT CARDS ── -->
+<!-- wave divider -->
+
+<div class="wave">
+  <svg viewBox="0 0 1440 64" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0 32C240 64 480 0 720 32C960 64 1200 8 1440 32L1440 64L0 64Z" fill="rgba(249,213,200,0.22)"/>
+  </svg>
+</div>
+
+<!-- ─── PRODUCT CARDS ─── -->
 
 <section class="products">
-  <div class="section-header">
-    <h2>Our Signature <em style="font-style:italic; color:var(--rose)">Flavors</em></h2>
-    <p>Carefully crafted, impossibly delicious.</p>
+  <div class="sec-head sr">
+    <h2>Nos Saveurs <em style="font-style:italic;color:var(--rose)">Signatures</em></h2>
+    <p>Chaque cuillère, une aventure.</p>
   </div>
 
-  <div class="cards-grid">
-    <!-- Chocolate -->
-    <div class="card card-choc">
-      <span class="card-img">🍫</span>
-      <div class="card-flavor">Belgian Chocolate</div>
-      <div class="card-note">Rich dark cocoa with hazelnut swirls & a velvety finish.</div>
-      <div class="card-footer">
-        <span class="card-price">$5.90</span>
-        <button class="card-add" title="Add to cart" data-name="Belgian Chocolate">+</button>
-      </div>
-    </div>
+  <div class="cards">
 
 ```
+<!-- Chocolate -->
+<div class="card card-choc sr d1">
+  <div class="card-img-wrap">
+    <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80&fit=crop&crop=center"
+         alt="Chocolat Belge"
+         onerror="this.src='https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80&fit=crop'">
+  </div>
+  <div class="card-body">
+    <div class="card-flavor">Chocolat Belge</div>
+    <div class="card-note">Cacao noir intense aux éclats de noisettes et ganache fondante.</div>
+    <div class="card-foot">
+      <div class="card-price">55 <sub>د.م.</sub></div>
+      <button class="card-add-btn" data-name="Chocolat Belge">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Strawberry -->
-<div class="card card-straw">
-  <span class="card-img">🍓</span>
-  <div class="card-flavor">Wild Strawberry</div>
-  <div class="card-note">Sun-ripened berries folded into a dreamy pink cream.</div>
-  <div class="card-footer">
-    <span class="card-price">$5.50</span>
-    <button class="card-add" title="Add to cart" data-name="Wild Strawberry">+</button>
+<div class="card card-straw sr d2">
+  <div class="card-img-wrap">
+    <img src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=600&q=80&fit=crop&crop=center"
+         alt="Fraise Sauvage"
+         onerror="this.src='https://images.unsplash.com/photo-1557142046-c704a3adf364?w=600&q=80&fit=crop'">
+  </div>
+  <div class="card-body">
+    <div class="card-flavor">Fraise Sauvage</div>
+    <div class="card-note">Fraises de saison mixées dans une crème onctueuse et rosée.</div>
+    <div class="card-foot">
+      <div class="card-price">50 <sub>د.م.</sub></div>
+      <button class="card-add-btn" data-name="Fraise Sauvage">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
   </div>
 </div>
 
 <!-- Vanilla -->
-<div class="card card-van">
-  <span class="card-img">🌾</span>
-  <div class="card-flavor">Madagascar Vanilla</div>
-  <div class="card-note">Classic bourbon vanilla bean with flecks of pure warmth.</div>
-  <div class="card-footer">
-    <span class="card-price">$5.20</span>
-    <button class="card-add" title="Add to cart" data-name="Madagascar Vanilla">+</button>
+<div class="card card-van sr d3">
+  <div class="card-img-wrap">
+    <img src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=600&q=80&fit=crop&crop=center"
+         alt="Vanille Madagascar"
+         onerror="this.src='https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=80&fit=crop'">
+  </div>
+  <div class="card-body">
+    <div class="card-flavor">Vanille Madagascar</div>
+    <div class="card-note">Gousse de vanille Bourbon aux arômes chauds et envoûtants.</div>
+    <div class="card-foot">
+      <div class="card-price">48 <sub>د.م.</sub></div>
+      <button class="card-add-btn" data-name="Vanille Madagascar">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
   </div>
 </div>
 ```
@@ -666,67 +695,114 @@ nav { padding: 16px 5vw; }
   </div>
 </section>
 
-<!-- ── FOOTER ── -->
+<!-- ─── FOOTER ─── -->
 
-<div class="footer-strip">
-  Crafted with ❤️ by <span>Glacé</span> · Premium Ice Cream · Est. 2024
-</div>
+<footer>
+  Fait avec ❤️ par <span>Glacé</span> · Marrakech, Maroc · © 2025
+</footer>
+
+<!-- ─── JS ─── -->
 
 <script>
-  // Navbar scroll effect
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 20);
+/* ── Loader ── */
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    document.getElementById('loader').classList.add('gone');
+    // stagger hero reveals
+    var reveals = document.querySelectorAll('.reveal');
+    reveals.forEach(function(el, i) { el.classList.add('in'); });
+  }, 1050);
+});
+
+/* ── Custom cursor ── */
+var cur  = document.getElementById('cur');
+var ring = document.getElementById('cur-ring');
+var mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+(function tick() {
+  cur.style.left  = mx + 'px'; cur.style.top  = my + 'px';
+  rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(tick);
+})();
+
+/* ── Navbar ── */
+var nav = document.getElementById('nav');
+window.addEventListener('scroll', function() {
+  nav.classList.toggle('solid', window.scrollY > 30);
+}, { passive: true });
+
+/* ── Scroll reveal (cards) ── */
+var srEls = document.querySelectorAll('.sr');
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
   });
+}, { threshold: 0.18 });
+srEls.forEach(function(el) { obs.observe(el); });
 
-  // Quantity selector
-  let qty = 1;
-  const qtyNum = document.getElementById('qtyNum');
-  document.getElementById('qtyMinus').addEventListener('click', () => {
-    if (qty > 1) { qty--; qtyNum.textContent = qty; qtyNum.style.transform = 'scale(1.2)'; setTimeout(() => qtyNum.style.transform = '', 180); }
+/* ── Quantity ── */
+var qty = 1;
+var qNum = document.getElementById('qNum');
+function bump() {
+  qNum.classList.add('bump');
+  setTimeout(function() { qNum.classList.remove('bump'); }, 260);
+}
+document.getElementById('qMinus').onclick = function() {
+  if (qty > 1) { qty--; qNum.textContent = qty; bump(); }
+};
+document.getElementById('qPlus').onclick = function() {
+  if (qty < 20) { qty++; qNum.textContent = qty; bump(); }
+};
+
+/* ── Cart & Toast ── */
+var count = 0;
+var badge = document.getElementById('badge');
+var toast = document.getElementById('toast');
+var toastMsg = document.getElementById('toast-msg');
+var toastTimer;
+
+function addToCart(n, name) {
+  count += n;
+  badge.textContent = count;
+  badge.classList.add('pop');
+  setTimeout(function() { badge.classList.remove('pop'); }, 380);
+  toastMsg.textContent = (name || 'Article') + ' ajouté au panier (×' + n + ')';
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { toast.classList.remove('show'); }, 3000);
+}
+
+document.getElementById('orderBtn').onclick = function() {
+  addToCart(qty, 'Glacé Premium');
+  var btn = this;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"/></svg> Ajouté !';
+  setTimeout(function() {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Commander maintenant';
+  }, 2200);
+};
+
+document.querySelectorAll('.card-add-btn').forEach(function(btn) {
+  btn.onclick = function() {
+    var name = this.getAttribute('data-name');
+    addToCart(1, name);
+    var orig = this.innerHTML;
+    this.innerHTML = '<svg viewBox="0 0 24 24" style="width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"/></svg>';
+    this.style.transform = 'scale(1.25) rotate(0deg)';
+    var self = this;
+    setTimeout(function() { self.innerHTML = orig; self.style.transform = ''; }, 1300);
+  };
+});
+
+/* ── Hero parallax on mouse ── */
+if (window.innerWidth > 960) {
+  var vis = document.querySelector('.hero-visual');
+  document.addEventListener('mousemove', function(e) {
+    var dx = (e.clientX / window.innerWidth  - 0.5) * 16;
+    var dy = (e.clientY / window.innerHeight - 0.5) * 9;
+    vis.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
   });
-  document.getElementById('qtyPlus').addEventListener('click', () => {
-    if (qty < 20) { qty++; qtyNum.textContent = qty; qtyNum.style.transform = 'scale(1.2)'; setTimeout(() => qtyNum.style.transform = '', 180); }
-  });
-
-  // Cart counter
-  let cartCount = 0;
-  const badge = document.getElementById('cartBadge');
-
-  function addToCart(n) {
-    cartCount += n;
-    badge.textContent = cartCount;
-    badge.style.transform = 'scale(1.5)';
-    setTimeout(() => badge.style.transform = '', 300);
-  }
-
-  document.getElementById('orderBtn').addEventListener('click', () => {
-    addToCart(qty);
-    const btn = document.getElementById('orderBtn');
-    btn.textContent = '✅ Added!';
-    setTimeout(() => btn.textContent = '🛒 Order Now', 1500);
-  });
-
-  document.querySelectorAll('.card-add').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      addToCart(1);
-      const orig = btn.textContent;
-      btn.textContent = '✓';
-      btn.style.transform = 'scale(1.3) rotate(0deg)';
-      setTimeout(() => { btn.textContent = orig; btn.style.transform = ''; }, 900);
-    });
-  });
-
-  // Subtle parallax on hero visual
-  const heroVisual = document.querySelector('.hero-visual');
-  if (window.innerWidth > 900) {
-    document.addEventListener('mousemove', (e) => {
-      const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-      const dx = (e.clientX - cx) / cx * 6;
-      const dy = (e.clientY - cy) / cy * 4;
-      heroVisual.style.transform = `translate(${dx}px, ${dy}px)`;
-    });
-  }
+}
 </script>
 
 </body>
