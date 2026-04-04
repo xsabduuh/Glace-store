@@ -1,78 +1,73 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glacé | Crème Glacée Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Glacé – Crème glacée artisanale premium">
+  <title>Glacé | Artisan Glacier</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- شاشة التحميل (ستختفي تلقائياً بعد 1 ثانية) -->
-    <div id="loader">
-        <div class="loader-logo">Glacé</div>
-        <div class="loader-bar"><div class="loader-fill"></div></div>
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <div id="loader">
+    <div class="loader-logo">Glacé</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+
+  <div id="toast"><span>✓</span><span id="toastMsg">Ajouté au panier</span></div>
+
+  <nav id="navbar">
+    <a href="#" class="logo">Glac<span>é</span></a>
+    <ul class="nav-links">
+      <li><a href="#hero">Accueil</a></li>
+      <li><a href="#produits">Saveurs</a></li>
+      <li><a href="#about">Notre histoire</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="cart-icon-btn" id="cartDrawerBtn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="cart-badge" id="cartCount">0</span>
+    </button>
+  </nav>
+
+  <div class="cart-overlay" id="cartOverlay">
+    <div class="cart-drawer">
+      <div class="cart-header"><h3>🛒 Votre panier</h3><button class="close-cart" id="closeCartBtn">✕</button></div>
+      <div class="cart-items" id="cartItemsContainer"><div class="empty-cart-msg">🍃 Votre panier est vide</div></div>
+      <div class="cart-footer"><div class="cart-total"><span>Total</span><span id="cartTotalPrice">0 د.م.</span></div><button class="checkout-btn" id="checkoutBtn">Passer la commande</button></div>
     </div>
+  </div>
 
-    <!-- عناصر المؤشر المخصص -->
-    <div id="cursor-dot"></div>
-    <div id="cursor-ring"></div>
-
-    <!-- إشعار توست -->
-    <div id="toast">✓ <span id="toastMsg">Ajouté au panier</span></div>
-
-    <!-- شريط التنقل -->
-    <nav id="navbar">
-        <a href="#" class="logo">Glac<span>é</span></a>
-        <ul class="nav-links">
-            <li><a href="#hero">Accueil</a></li>
-            <li><a href="#produits">Saveurs</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-        <button class="cart-icon-btn" id="cartDrawerBtn">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/>
-            </svg>
-            <span class="cart-badge" id="cartCount">0</span>
-        </button>
-    </nav>
-
-    <!-- السلة الجانبية -->
-    <div class="cart-overlay" id="cartOverlay">
-        <div class="cart-drawer">
-            <div class="cart-header"><h3>🛒 Votre panier</h3><button class="close-cart" id="closeCartBtn">✕</button></div>
-            <div class="cart-items" id="cartItemsContainer"><div class="empty-cart-msg">🍃 Votre panier est vide</div></div>
-            <div class="cart-footer"><div class="cart-total"><span>Total</span><span id="cartTotalPrice">0 د.م.</span></div><button class="checkout-btn" id="checkoutBtn">Passer la commande</button></div>
-        </div>
+  <section id="hero" class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="badge-new sr">✦ Nouvelle Collection Été</div>
+      <h1 class="sr">Trouvez votre<br><em>parfaite</em> douceur glacée</h1>
+      <p class="hero-desc sr">Artisanale, chaque boule raconte une histoire — ingrédients nobles et passion.</p>
+      <div class="price-row sr"><span class="price-main">69 د.م.</span><span class="price-old">85 د.م.</span><span class="price-discount">-19%</span></div>
+      <div class="qty-row sr"><span>Quantité :</span><div class="qty-ctrl"><button class="qty-btn" id="decrQty">−</button><span class="qty-num" id="qtyValue">1</span><button class="qty-btn" id="incrQty">+</button></div></div>
+      <div class="cta-group sr"><button class="btn-primary" id="addMainToCart">✨ Ajouter au panier</button><button class="btn-outline" id="scrollToProducts">Découvrir les saveurs →</button></div>
     </div>
+    <div class="hero-visual sr">
+      <div class="stage"><div class="disc-glow"></div><img class="product-img-main" src="https://images.unsplash.com/photo-1567206563114-c179706e6b3d?w=600&q=80" alt="Glace premium" loading="lazy"><div class="floating-topping top-right"><img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=80&h=80&fit=crop" width="50" alt="topping"></div><div class="floating-topping bottom-left"><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=80&h=80&fit=crop" width="48" alt="topping"></div></div>
+    </div>
+  </section>
 
-    <!-- قسم البطل (Hero) -->
-    <section id="hero" class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-            <div class="badge-new">✦ Nouvelle Collection Été</div>
-            <h1>Trouvez votre<br><em>parfaite</em> douceur glacée</h1>
-            <p class="hero-desc">Artisanale, chaque boule raconte une histoire — ingrédients nobles et passion.</p>
-            <div class="price-row"><span class="price-main">69 د.م.</span><span class="price-old">85 د.م.</span><span class="price-discount">-19%</span></div>
-            <div class="qty-row"><span>Quantité :</span><div class="qty-ctrl"><button class="qty-btn" id="decrQty">−</button><span class="qty-num" id="qtyValue">1</span><button class="qty-btn" id="incrQty">+</button></div></div>
-            <div class="cta-group"><button class="btn-primary" id="addMainToCart">✨ Ajouter au panier</button><button class="btn-outline" id="scrollToProducts">Découvrir les saveurs →</button></div>
-        </div>
-        <div class="hero-visual"><div class="stage"><div class="disc-glow"></div><img class="product-img-main" src="https://images.unsplash.com/photo-1567206563114-c179706e6b3d?w=600&q=80" alt="Glace"><div class="floating-topping top-right"><img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=80&h=80&fit=crop" width="50"></div></div></div>
-    </section>
+  <section id="produits" class="products">
+    <div class="section-title sr"><h2>Nos <em style="color:var(--rose); font-style:italic;">signatures</em></h2></div>
+    <div class="card-grid">
+      <div class="product-card sr" data-name="Chocolat Belge" data-price="55" data-id="choco"><div class="card-img"><img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80" alt="Chocolat" loading="lazy"></div><div class="card-info"><h3>Chocolat Belge</h3><p class="card-price">55 د.م.</p><button class="add-to-cart-card">+</button></div></div>
+      <div class="product-card sr" data-name="Fraise Sauvage" data-price="50" data-id="straw"><div class="card-img"><img src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=600&q=80" alt="Fraise" loading="lazy"></div><div class="card-info"><h3>Fraise Sauvage</h3><p class="card-price">50 د.م.</p><button class="add-to-cart-card">+</button></div></div>
+      <div class="product-card sr" data-name="Vanille Madagascar" data-price="48" data-id="vanilla"><div class="card-img"><img src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=600&q=80" alt="Vanille" loading="lazy"></div><div class="card-info"><h3>Vanille Madagascar</h3><p class="card-price">48 د.م.</p><button class="add-to-cart-card">+</button></div></div>
+    </div>
+  </section>
 
-    <!-- قسم المنتجات -->
-    <section id="produits" class="products">
-        <div class="section-title"><h2>Nos <em>signatures</em></h2></div>
-        <div class="card-grid">
-            <div class="product-card" data-name="Chocolat Belge" data-price="55" data-id="choco"><div class="card-img"><img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80" alt="Chocolat"></div><div class="card-info"><h3>Chocolat Belge</h3><p class="card-price">55 د.م.</p><button class="add-to-cart-card">+</button></div></div>
-            <div class="product-card" data-name="Fraise Sauvage" data-price="50" data-id="straw"><div class="card-img"><img src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=600&q=80" alt="Fraise"></div><div class="card-info"><h3>Fraise Sauvage</h3><p class="card-price">50 د.م.</p><button class="add-to-cart-card">+</button></div></div>
-            <div class="product-card" data-name="Vanille Madagascar" data-price="48" data-id="vanilla"><div class="card-img"><img src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=600&q=80" alt="Vanille"></div><div class="card-info"><h3>Vanille Madagascar</h3><p class="card-price">48 د.م.</p><button class="add-to-cart-card">+</button></div></div>
-        </div>
-    </section>
+  <footer><p>❄️ Glacé — Marrakech, Maroc ❄️ <br>Artisanat glacé depuis 2025</p></footer>
 
-    <footer><p>❄️ Glacé — Marrakech, Maroc ❄️ <br>Artisanat glacé depuis 2025</p></footer>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
