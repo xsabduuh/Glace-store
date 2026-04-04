@@ -1,557 +1,269 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Glacé | Crème Glacée Artisanale</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --cream: #FFF9F2;
-            --blush: #FCE4DB;
-            --rose: #E56A4F;
-            --rose-deep: #C9442C;
-            --choc: #3E2A21;
-            --choc-soft: #5C3E2E;
-            --text-muted: #8E6E5A;
-            --shadow: 0 10px 25px rgba(0,0,0,0.05);
-            --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--cream);
-            color: var(--choc);
-            overflow-x: hidden;
-        }
-
-        /* --- LOADER FIXE (يختفي حتماً) --- */
-        #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--choc);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 1rem;
-            z-index: 10000;
-            transition: opacity 0.4s, visibility 0.4s;
-            opacity: 1;
-            visibility: visible;
-        }
-        #loader.hide-loader {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .loader-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            color: var(--blush);
-            font-style: italic;
-        }
-        .loader-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255,255,255,0.2);
-            border-top: 3px solid var(--rose);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .skip-loader {
-            margin-top: 1rem;
-            background: none;
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 6px 18px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        /* --- RESTE DU STYLE (compact mais complet) --- */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 6vw;
-            z-index: 500;
-            transition: 0.3s;
-            background: transparent;
-        }
-        nav.scrolled {
-            background: rgba(255,249,242,0.92);
-            backdrop-filter: blur(12px);
-            padding: 12px 6vw;
-        }
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--choc);
-            text-decoration: none;
-        }
-        .logo span { color: var(--rose); }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        .cart-icon {
-            background: var(--choc);
-            border: none;
-            width: 48px;
-            height: 48px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-        }
-        .cart-count {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: var(--rose);
-            color: white;
-            font-size: 0.65rem;
-            font-weight: bold;
-            min-width: 20px;
-            height: 20px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--cream);
-        }
-
-        /* Panier latéral */
-        .cart-panel {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: min(420px, 90vw);
-            height: 100%;
-            background: var(--cream);
-            z-index: 2000;
-            box-shadow: -5px 0 30px rgba(0,0,0,0.15);
-            display: flex;
-            flex-direction: column;
-            transition: right 0.3s ease;
-        }
-        .cart-panel.open { right: 0; }
-        .cart-header {
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #eee;
-        }
-        .cart-items {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-        }
-        .cart-item {
-            background: white;
-            border-radius: 20px;
-            padding: 0.8rem;
-            margin-bottom: 0.8rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .cart-item-controls {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .cart-qty-btn {
-            background: var(--blush);
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .cart-remove {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        .cart-footer {
-            padding: 1rem;
-            border-top: 1px solid #eee;
-        }
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-        .checkout-btn {
-            width: 100%;
-            background: var(--choc);
-            color: white;
-            border: none;
-            padding: 0.8rem;
-            border-radius: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(3px);
-            z-index: 1999;
-            visibility: hidden;
-            opacity: 0;
-            transition: 0.2s;
-        }
-        .overlay.active {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* Hero */
-        .hero {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            padding: 120px 6vw 80px;
-            gap: 2rem;
-        }
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.2rem, 5vw, 3.8rem);
-        }
-        .hero h1 em { color: var(--rose); font-style: italic; }
-        .btn-primary {
-            background: var(--choc);
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 60px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #ccc;
-            padding: 12px 28px;
-            border-radius: 60px;
-            cursor: pointer;
-        }
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            padding: 3rem 6vw;
-        }
-        .card {
-            background: white;
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-        .card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        .card-info {
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .add-card {
-            background: var(--choc);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.3rem;
-            cursor: pointer;
-        }
-        footer {
-            background: var(--choc);
-            text-align: center;
-            padding: 2rem;
-            color: rgba(255,255,255,0.6);
-        }
-        @media (max-width: 800px) {
-            .hero { grid-template-columns: 1fr; text-align: center; }
-            .nav-links { display: none; }
-        }
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: var(--choc);
-            color: white;
-            padding: 10px 24px;
-            border-radius: 40px;
-            z-index: 3000;
-            transition: 0.3s;
-            opacity: 0;
-        }
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glacé | Accueil</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    :root {
+      --cream: #FFF9F2;
+      --blush: #FCE4DB;
+      --rose: #E56A4F;
+      --choc: #3E2A21;
+      --text-muted: #8E6E5A;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--choc);
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 6vw;
+      background: rgba(255,249,242,0.95);
+      backdrop-filter: blur(8px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--choc);
+    }
+    .logo span { color: var(--rose); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; }
+    .cart-link {
+      background: var(--choc);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .cart-link:hover { background: var(--rose); }
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 100px 6vw 60px;
+      gap: 2rem;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+    }
+    .hero h1 em { color: var(--rose); font-style: italic; }
+    .btn {
+      background: var(--choc);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+      display: inline-block;
+    }
+    .hero-img img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 60% 40% 50% 50%;
+      box-shadow: 0 20px 30px rgba(0,0,0,0.1);
+    }
+    .products {
+      padding: 3rem 6vw;
+    }
+    .section-title {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      transition: 0.3s;
+    }
+    .card:hover { transform: translateY(-6px); }
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .card-info {
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .add-btn {
+      background: var(--choc);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+    footer {
+      background: var(--choc);
+      text-align: center;
+      padding: 1.5rem;
+      color: rgba(255,255,255,0.6);
+      margin-top: 2rem;
+    }
+    @media (max-width: 800px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .nav-links { display: none; }
+    }
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--choc);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 40px;
+      transition: 0.3s;
+      opacity: 0;
+      z-index: 1000;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
 
-<div id="loader">
-    <div class="loader-logo">Glacé</div>
-    <div class="loader-spinner"></div>
-    <button class="skip-loader" id="skipLoader">Passer →</button>
-</div>
-
-<div class="toast" id="toast">✓ <span id="toastMsg">Ajouté</span></div>
-
-<nav id="navbar">
-    <a href="#" class="logo">Glac<span>é</span></a>
-    <ul class="nav-links">
-        <li><a href="#home">Accueil</a></li>
-        <li><a href="#products">Saveurs</a></li>
-        <li><a href="#">Contact</a></li>
-    </ul>
-    <button class="cart-icon" id="cartBtn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
-        <span class="cart-count" id="cartCount">0</span>
-    </button>
+<nav>
+  <a href="#" class="logo">Glac<span>é</span></a>
+  <ul class="nav-links">
+    <li><a href="#">Accueil</a></li>
+    <li><a href="#products">Saveurs</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <a href="cart.html" class="cart-link">🛒 Panier (<span id="cartCount">0</span>)</a>
 </nav>
 
-<div class="overlay" id="overlay"></div>
-<div class="cart-panel" id="cartPanel">
-    <div class="cart-header"><h3>🛒 Votre panier</h3><button id="closeCart" style="background:none; border:none; font-size:1.5rem;">✕</button></div>
-    <div class="cart-items" id="cartItemsList"><div style="text-align:center; padding:2rem;">Panier vide</div></div>
-    <div class="cart-footer"><div class="cart-total"><span>Total</span><span id="cartTotal">0 د.م.</span></div><button class="checkout-btn" id="checkoutBtn">Commander</button></div>
-</div>
-
-<section id="home" class="hero">
-    <div>
-        <div style="background:rgba(229,106,79,0.1); display:inline-block; padding:5px 15px; border-radius:40px; font-size:0.7rem;">✦ NOUVEAUTÉ</div>
-        <h1>Trouvez votre<br><em>parfaite</em> douceur glacée</h1>
-        <p style="color:var(--text-muted); margin:1rem 0;">Artisanale, chaque boule est un voyage.</p>
-        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-            <button class="btn-primary" id="heroAddBtn">✨ Ajouter au panier</button>
-            <button class="btn-outline" id="scrollToProd">Découvrir →</button>
-        </div>
-    </div>
-    <div><img src="https://images.unsplash.com/photo-1567206563114-c179706e6b3d?w=500&q=80" style="width:100%; max-width:350px; border-radius: 60% 40% 50% 50%; box-shadow:0 20px 30px rgba(0,0,0,0.1);" alt="glace"></div>
+<section class="hero">
+  <div>
+    <div style="background:rgba(229,106,79,0.1); display:inline-block; padding:5px 15px; border-radius:40px;">✦ NOUVEAUTÉ</div>
+    <h1>Trouvez votre<br><em>parfaite</em> douceur glacée</h1>
+    <p style="color: var(--text-muted); margin: 1rem 0;">Artisanale, chaque boule est un voyage.</p>
+    <button class="btn" id="heroAddBtn">✨ Ajouter au panier</button>
+  </div>
+  <div class="hero-img">
+    <img src="https://images.unsplash.com/photo-1567206563114-c179706e6b3d?w=500&q=80" alt="Glace">
+  </div>
 </section>
 
-<section id="products" style="padding: 2rem 6vw;">
-    <h2 style="font-family: 'Playfair Display'; text-align:center; margin-bottom:2rem;">Nos <span style="color:var(--rose);">signatures</span></h2>
-    <div class="product-grid" id="productGrid"></div>
+<section id="products" class="products">
+  <div class="section-title">Nos <span style="color: var(--rose);">signatures</span></div>
+  <div class="product-grid" id="productGrid"></div>
 </section>
 
-<footer><p>❄️ Glacé — Marrakech, Maroc ❄️</p></footer>
+<footer>❄️ Glacé — Marrakech, Maroc ❄️</footer>
+
+<div class="toast" id="toastMsg">✓ Ajouté</div>
 
 <script>
-    (function() {
-        // -------- إخفاء شاشة التحميل بشكل مضمون --------
-        const loader = document.getElementById('loader');
-        const skipBtn = document.getElementById('skipLoader');
-        function hideLoader() {
-            if (loader) loader.classList.add('hide-loader');
-        }
-        // مؤقت تلقائي بعد 0.8 ثانية
-        setTimeout(hideLoader, 800);
-        if (skipBtn) skipBtn.onclick = hideLoader;
+  // ---------- produits ----------
+  const products = [
+    { id: 'choco', name: 'Chocolat Belge', price: 55, img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&q=80' },
+    { id: 'fraise', name: 'Fraise Sauvage', price: 50, img: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?w=400&q=80' },
+    { id: 'vanille', name: 'Vanille Madagascar', price: 48, img: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400&q=80' }
+  ];
 
-        // -------- بيانات المنتجات --------
-        const products = [
-            { id: 'choco', name: 'Chocolat Belge', price: 55, img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&q=80' },
-            { id: 'fraise', name: 'Fraise Sauvage', price: 50, img: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?w=400&q=80' },
-            { id: 'vanille', name: 'Vanille Madagascar', price: 48, img: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400&q=80' }
-        ];
+  // ---------- fonctions panier (localStorage) ----------
+  let cart = [];
+  function loadCart() {
+    const saved = localStorage.getItem('glace_cart');
+    if (saved) try { cart = JSON.parse(saved); } catch(e) { cart = []; }
+    else cart = [];
+    updateCartCounter();
+  }
+  function saveCart() {
+    localStorage.setItem('glace_cart', JSON.stringify(cart));
+  }
+  function updateCartCounter() {
+    const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const countSpan = document.getElementById('cartCount');
+    if (countSpan) countSpan.innerText = total;
+  }
+  function addToCart(product, qty = 1) {
+    const existing = cart.find(p => p.id === product.id);
+    if (existing) existing.quantity += qty;
+    else cart.push({ ...product, quantity: qty });
+    saveCart();
+    updateCartCounter();
+    showToast(`${product.name} ajouté`);
+  }
+  function showToast(msg) {
+    const toast = document.getElementById('toastMsg');
+    toast.innerText = '✓ ' + msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
 
-        // -------- سلة التسوق (localStorage) --------
-        let cart = [];
-        function saveCart() { localStorage.setItem('glace_cart', JSON.stringify(cart)); }
-        function loadCart() {
-            const saved = localStorage.getItem('glace_cart');
-            if (saved) try { cart = JSON.parse(saved); } catch(e) { cart = []; }
-            else cart = [];
-            updateCartUI();
-        }
-        function addToCart(product, quantity = 1) {
-            const existing = cart.find(p => p.id === product.id);
-            if (existing) existing.quantity += quantity;
-            else cart.push({ ...product, quantity });
-            saveCart();
-            updateCartUI();
-            showToast(`${product.name} ajouté (x${quantity})`);
-        }
-        function updateCartUI() {
-            const countSpan = document.getElementById('cartCount');
-            const container = document.getElementById('cartItemsList');
-            const totalSpan = document.getElementById('cartTotal');
-            let totalItems = 0, totalPrice = 0;
-            cart.forEach(item => {
-                totalItems += item.quantity;
-                totalPrice += item.price * item.quantity;
-            });
-            if (countSpan) countSpan.innerText = totalItems;
-            if (totalSpan) totalSpan.innerText = totalPrice + ' د.م.';
-            if (!container) return;
-            if (cart.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:2rem;">🍃 Panier vide</div>';
-                return;
-            }
-            let html = '';
-            cart.forEach((item, idx) => {
-                html += `
-                    <div class="cart-item">
-                        <div><strong>${escapeHtml(item.name)}</strong><br>${item.price} د.م.</div>
-                        <div class="cart-item-controls">
-                            <button class="cart-qty-btn" data-index="${idx}" data-delta="-1">−</button>
-                            <span>${item.quantity}</span>
-                            <button class="cart-qty-btn" data-index="${idx}" data-delta="1">+</button>
-                            <button class="cart-remove" data-index="${idx}">🗑️</button>
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-            // ربط الأحداث
-            document.querySelectorAll('.cart-qty-btn').forEach(btn => {
-                btn.onclick = (e) => {
-                    const idx = parseInt(btn.dataset.index);
-                    const delta = parseInt(btn.dataset.delta);
-                    if (cart[idx]) {
-                        let newQty = cart[idx].quantity + delta;
-                        if (newQty <= 0) cart.splice(idx, 1);
-                        else cart[idx].quantity = newQty;
-                        saveCart();
-                        updateCartUI();
-                        showToast('Panier mis à jour');
-                    }
-                };
-            });
-            document.querySelectorAll('.cart-remove').forEach(btn => {
-                btn.onclick = () => {
-                    const idx = parseInt(btn.dataset.index);
-                    cart.splice(idx, 1);
-                    saveCart();
-                    updateCartUI();
-                    showToast('Article retiré');
-                };
-            });
-        }
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            const span = document.getElementById('toastMsg');
-            if (!toast) return;
-            span.innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-        }
-        function escapeHtml(str) {
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
+  // عرض المنتجات في الشبكة
+  const grid = document.getElementById('productGrid');
+  if (grid) {
+    products.forEach(prod => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${prod.img}" alt="${prod.name}" loading="lazy">
+        <div class="card-info">
+          <div><strong>${prod.name}</strong><br>${prod.price} د.م.</div>
+          <button class="add-btn" data-id="${prod.id}" data-name="${prod.name}" data-price="${prod.price}">+</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    document.querySelectorAll('.add-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const name = btn.dataset.name;
+        const price = parseInt(btn.dataset.price);
+        addToCart({ id, name, price }, 1);
+      });
+    });
+  }
 
-        // -------- عرض المنتجات في الشبكة --------
-        const grid = document.getElementById('productGrid');
-        if (grid) {
-            products.forEach(prod => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${prod.img}" alt="${prod.name}" loading="lazy">
-                    <div class="card-info">
-                        <div><strong>${prod.name}</strong><br>${prod.price} د.م.</div>
-                        <button class="add-card" data-id="${prod.id}" data-name="${prod.name}" data-price="${prod.price}">+</button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-            // ربط أزرار الإضافة في البطاقات
-            document.querySelectorAll('.add-card').forEach(btn => {
-                btn.onclick = (e) => {
-                    const id = btn.dataset.id;
-                    const name = btn.dataset.name;
-                    const price = parseInt(btn.dataset.price);
-                    addToCart({ id, name, price }, 1);
-                };
-            });
-        }
+  // produit principal
+  const heroBtn = document.getElementById('heroAddBtn');
+  if (heroBtn) {
+    heroBtn.addEventListener('click', () => {
+      addToCart({ id: 'main', name: 'Glacé Signature', price: 69 }, 1);
+    });
+  }
 
-        // -------- إضافة المنتج الرئيسي من الهيرو --------
-        const heroBtn = document.getElementById('heroAddBtn');
-        if (heroBtn) {
-            heroBtn.onclick = () => {
-                addToCart({ id: 'main', name: 'Glacé Signature', price: 69 }, 1);
-            };
-        }
-
-        // -------- فتح وإغلاق السلة --------
-        const cartBtn = document.getElementById('cartBtn');
-        const panel = document.getElementById('cartPanel');
-        const overlay = document.getElementById('overlay');
-        const closeCart = document.getElementById('closeCart');
-        function openCart() { panel.classList.add('open'); overlay.classList.add('active'); }
-        function closeCartFunc() { panel.classList.remove('open'); overlay.classList.remove('active'); }
-        if (cartBtn) cartBtn.onclick = openCart;
-        if (closeCart) closeCart.onclick = closeCartFunc;
-        if (overlay) overlay.onclick = closeCartFunc;
-
-        // -------- تمرير سلس للمنتجات --------
-        const scrollBtn = document.getElementById('scrollToProd');
-        if (scrollBtn) {
-            scrollBtn.onclick = () => document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // -------- شريط التنقل يتغير عند التمرير --------
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 30) nav.classList.add('scrolled');
-            else nav.classList.remove('scrolled');
-        });
-
-        // -------- زر الخروج (محاكاة) --------
-        const checkout = document.getElementById('checkoutBtn');
-        if (checkout) {
-            checkout.onclick = () => {
-                if (cart.length === 0) showToast('Panier vide');
-                else showToast('Merci ! Simulation commande');
-            };
-        }
-
-        // تحميل السلة
-        loadCart();
-    })();
+  loadCart();
 </script>
 </body>
 </html>
