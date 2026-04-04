@@ -3,24 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="Glacé – Crème glacée artisanale premium. Commandez en ligne.">
+  <meta name="description" content="Glacé – Crème glacée artisanale premium">
   <title>Glacé | Artisan Glacier</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Cursor personnalisé -->
   <div id="cursor-dot"></div>
   <div id="cursor-ring"></div>
 
-  <!-- Loader -->
-  <div id="loader"><div class="loader-logo">Glacé</div><div class="loader-bar"><div class="loader-fill"></div></div></div>
+  <div id="loader">
+    <div class="loader-logo">Glacé</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
 
-  <!-- Toast -->
   <div id="toast"><span>✓</span><span id="toastMsg">Ajouté au panier</span></div>
 
-  <!-- Navbar -->
   <nav id="navbar">
     <a href="#" class="logo">Glac<span>é</span></a>
     <ul class="nav-links">
@@ -35,7 +34,6 @@
     </button>
   </nav>
 
-  <!-- Panier latéral (amélioré) -->
   <div class="cart-overlay" id="cartOverlay">
     <div class="cart-drawer">
       <div class="cart-header"><h3>🛒 Votre panier</h3><button class="close-cart" id="closeCartBtn">✕</button></div>
@@ -44,7 +42,6 @@
     </div>
   </div>
 
-  <!-- Hero -->
   <section id="hero" class="hero">
     <div class="hero-bg"></div>
     <div class="hero-content">
@@ -55,10 +52,11 @@
       <div class="qty-row sr"><span>Quantité :</span><div class="qty-ctrl"><button class="qty-btn" id="decrQty">−</button><span class="qty-num" id="qtyValue">1</span><button class="qty-btn" id="incrQty">+</button></div></div>
       <div class="cta-group sr"><button class="btn-primary" id="addMainToCart">✨ Ajouter au panier</button><button class="btn-outline" id="scrollToProducts">Découvrir les saveurs →</button></div>
     </div>
-    <div class="hero-visual sr"><div class="stage"><div class="disc-glow"></div><img class="product-img-main" src="https://images.unsplash.com/photo-1567206563114-c179706e6b3d?w=600&q=80" alt="Glace premium" loading="lazy"><div class="floating-topping top-right"><img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=80&h=80&fit=crop" width="50"></div><div class="floating-topping bottom-left"><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=80&h=80&fit=crop" width="48"></div></div></div>
+    <div class="hero-visual sr">
+      <div class="stage"><div class="disc-glow"></div><img class="product-img-main" src="https://images.unsplash.com/photo-1567206563114-c179706e6b3d?w=600&q=80" alt="Glace premium" loading="lazy"><div class="floating-topping top-right"><img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=80&h=80&fit=crop" width="50" alt="topping"></div><div class="floating-topping bottom-left"><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=80&h=80&fit=crop" width="48" alt="topping"></div></div>
+    </div>
   </section>
 
-  <!-- Produits -->
   <section id="produits" class="products">
     <div class="section-title sr"><h2>Nos <em style="color:var(--rose); font-style:italic;">signatures</em></h2></div>
     <div class="card-grid">
