@@ -2,142 +2,501 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Glacé | Accueil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Glacé | Crème Glacée Artisanale</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
+
+    /* ========== COULEURS AMÉLIORÉES ========== */
     :root {
-      --cream: #FFF9F2;
-      --blush: #FCE4DB;
+      --bg: #FFF8F0;
+      --soft-pink: #FCE4DB;
       --rose: #E56A4F;
+      --rose-deep: #C9442C;
       --choc: #3E2A21;
-      --text-muted: #8E6E5A;
+      --choc-light: #5C3E2E;
+      --text-light: #8E6E5A;
+      --gold: #E9C46A;
+      --white-soft: rgba(255, 255, 255, 0.92);
+      --shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+      --shadow-hover: 0 25px 45px rgba(62, 42, 33, 0.15);
+      --transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
+
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--cream);
+      background: var(--bg);
       color: var(--choc);
+      overflow-x: hidden;
     }
-    nav {
+
+    /* ========== LOADER ANIMÉ ========== */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--choc);
+      z-index: 10000;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 20px 6vw;
-      background: rgba(255,249,242,0.95);
-      backdrop-filter: blur(8px);
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: opacity 0.5s, visibility 0.5s;
+    }
+    #loader.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--soft-pink);
+      letter-spacing: -0.02em;
+      animation: fadeScale 0.8s ease;
+    }
+    .loader-spinner {
+      width: 45px;
+      height: 45px;
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top: 3px solid var(--rose);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeScale {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* ========== NAVBAR ========== */
+    nav {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 6vw;
+      z-index: 500;
+      transition: var(--transition);
+      background: transparent;
+    }
+    nav.scrolled {
+      background: rgba(255, 248, 240, 0.92);
+      backdrop-filter: blur(12px);
+      padding: 12px 6vw;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
     }
     .logo {
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       font-weight: 700;
-      text-decoration: none;
       color: var(--choc);
+      text-decoration: none;
+      letter-spacing: -0.02em;
     }
     .logo span { color: var(--rose); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; }
-    .cart-link {
-      background: var(--choc);
-      color: white;
-      padding: 8px 20px;
-      border-radius: 40px;
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+    }
+    .nav-links a {
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 500;
+      color: var(--text-light);
+      transition: 0.2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--rose);
+      transition: 0.25s;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .cart-icon {
+      background: var(--choc);
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+    .cart-icon:hover { background: var(--rose); transform: scale(1.05); }
+    .cart-count {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: var(--rose);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 800;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--bg);
+    }
+
+    /* ========== CART DRAWER (ANIMÉ) ========== */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.25s;
+    }
+    .cart-overlay.open {
+      visibility: visible;
+      opacity: 1;
+    }
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: min(460px, 90vw);
+      height: 100%;
+      background: var(--bg);
+      z-index: 2001;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: -8px 0 30px rgba(0,0,0,0.1);
+    }
+    .cart-overlay.open .cart-drawer {
+      right: 0;
+    }
+    .cart-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+    }
+    .close-cart {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
       transition: 0.2s;
     }
-    .cart-link:hover { background: var(--rose); }
+    .close-cart:hover { transform: rotate(90deg); color: var(--rose); }
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    .cart-item {
+      background: white;
+      border-radius: 24px;
+      padding: 0.9rem;
+      margin-bottom: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      transition: 0.2s;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .cart-item-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cart-qty-btn {
+      background: var(--soft-pink);
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .cart-qty-btn:hover { background: var(--rose); color: white; }
+    .cart-remove {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0.6;
+    }
+    .cart-footer {
+      padding: 1.2rem;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      background: var(--bg);
+    }
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .whatsapp-btn {
+      width: 100%;
+      background: #25D366;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 60px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: 0.2s;
+    }
+    .whatsapp-btn:hover { background: #128C7E; transform: scale(0.98); }
+    .checkout-btn {
+      width: 100%;
+      background: var(--choc);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 60px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .empty-cart-msg {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-light);
+    }
+
+    /* ========== HERO SECTION (avec nouvelle image) ========== */
     .hero {
       min-height: 100vh;
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: center;
-      padding: 100px 6vw 60px;
+      padding: 120px 6vw 80px;
       gap: 2rem;
+      position: relative;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 30% 30%, var(--soft-pink) 0%, transparent 65%),
+                  radial-gradient(ellipse 40% 40% at 85% 70%, #C8EAD9 0%, transparent 55%);
+      opacity: 0.6;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(229,106,79,0.12);
+      padding: 6px 16px;
+      border-radius: 60px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--rose);
+      margin-bottom: 1.2rem;
+      backdrop-filter: blur(4px);
     }
     .hero h1 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      line-height: 1.15;
     }
     .hero h1 em { color: var(--rose); font-style: italic; }
-    .btn {
+    .hero-desc {
+      color: var(--text-light);
+      max-width: 450px;
+      margin: 1.2rem 0 1.8rem;
+    }
+    .price-row {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 1.6rem;
+    }
+    .price-main {
+      font-size: 2.5rem;
+      font-weight: 800;
+    }
+    .price-old {
+      text-decoration: line-through;
+      color: var(--text-light);
+    }
+    .price-discount {
+      background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      color: white;
+    }
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .qty-ctrl {
+      display: flex;
+      background: white;
+      border-radius: 80px;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: var(--shadow);
+    }
+    .qty-btn {
+      width: 42px;
+      height: 42px;
+      border: none;
+      background: transparent;
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    .qty-num {
+      width: 46px;
+      text-align: center;
+      font-weight: 700;
+    }
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
       background: var(--choc);
       color: white;
       border: none;
       padding: 12px 28px;
-      border-radius: 40px;
-      font-weight: bold;
+      border-radius: 60px;
+      font-weight: 700;
       cursor: pointer;
-      margin-top: 1rem;
-      display: inline-block;
+      transition: var(--transition);
     }
-    .hero-img img {
+    .btn-primary:hover { background: var(--rose); transform: translateY(-3px); }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid rgba(62,42,33,0.2);
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .hero-visual {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+    .hero-img {
       width: 100%;
-      max-width: 400px;
+      max-width: 380px;
       border-radius: 60% 40% 50% 50%;
-      box-shadow: 0 20px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 30px 40px rgba(0,0,0,0.1), 0 0 0 8px rgba(255,255,255,0.7);
+      transition: transform 0.4s;
+      animation: floatImg 5s ease-in-out infinite;
     }
+    @keyframes floatImg {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+
+    /* produits */
     .products {
-      padding: 3rem 6vw;
+      padding: 4rem 6vw;
     }
     .section-title {
       text-align: center;
       font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
-      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      margin-bottom: 2.5rem;
     }
-    .product-grid {
+    .section-title span { color: var(--rose); font-style: italic; }
+    .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
     }
     .card {
       background: white;
-      border-radius: 28px;
+      border-radius: 32px;
       overflow: hidden;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-      transition: 0.3s;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      cursor: pointer;
     }
-    .card:hover { transform: translateY(-6px); }
-    .card img {
-      width: 100%;
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-hover);
+    }
+    .card-img {
       height: 220px;
-      object-fit: cover;
+      overflow: hidden;
     }
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .card:hover .card-img img { transform: scale(1.1); }
     .card-info {
       padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .add-btn {
+    .card-info h3 { font-size: 1.2rem; }
+    .card-price { font-weight: 800; color: var(--rose); }
+    .add-card {
       background: var(--choc);
       border: none;
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       color: white;
       font-size: 1.3rem;
       cursor: pointer;
+      transition: 0.2s;
     }
+    .add-card:hover { background: var(--rose); transform: rotate(90deg); }
     footer {
       background: var(--choc);
       text-align: center;
-      padding: 1.5rem;
+      padding: 1.8rem;
       color: rgba(255,255,255,0.6);
-      margin-top: 2rem;
-    }
-    @media (max-width: 800px) {
-      .hero { grid-template-columns: 1fr; text-align: center; }
-      .nav-links { display: none; }
     }
     .toast {
       position: fixed;
@@ -148,122 +507,268 @@
       color: white;
       padding: 10px 24px;
       border-radius: 40px;
+      z-index: 3000;
       transition: 0.3s;
       opacity: 0;
-      z-index: 1000;
     }
     .toast.show {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .nav-links { display: none; }
+      .hero-desc, .price-row, .qty-row, .cta-group { justify-content: center; margin-left: auto; margin-right: auto; }
+      .hero-desc { max-width: 100%; }
+    }
   </style>
 </head>
 <body>
 
-<nav>
-  <a href="#" class="logo">Glac<span>é</span></a>
-  <ul class="nav-links">
-    <li><a href="#">Accueil</a></li>
-    <li><a href="#products">Saveurs</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-  <a href="cart.html" class="cart-link">🛒 Panier (<span id="cartCount">0</span>)</a>
-</nav>
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">Glacé</div>
+  <div class="loader-spinner"></div>
+</div>
 
-<section class="hero">
-  <div>
-    <div style="background:rgba(229,106,79,0.1); display:inline-block; padding:5px 15px; border-radius:40px;">✦ NOUVEAUTÉ</div>
-    <h1>Trouvez votre<br><em>parfaite</em> douceur glacée</h1>
-    <p style="color: var(--text-muted); margin: 1rem 0;">Artisanale, chaque boule est un voyage.</p>
-    <button class="btn" id="heroAddBtn">✨ Ajouter au panier</button>
-  </div>
-  <div class="hero-img">
-    <img src="https://images.unsplash.com/photo-1567206563114-c179706e6b3d?w=500&q=80" alt="Glace">
-  </div>
-</section>
-
-<section id="products" class="products">
-  <div class="section-title">Nos <span style="color: var(--rose);">signatures</span></div>
-  <div class="product-grid" id="productGrid"></div>
-</section>
-
-<footer>❄️ Glacé — Marrakech, Maroc ❄️</footer>
-
+<!-- TOAST -->
 <div class="toast" id="toastMsg">✓ Ajouté</div>
 
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#" class="logo">Glac<span>é</span></a>
+  <ul class="nav-links">
+    <li><a href="#hero">Accueil</a></li>
+    <li><a href="#products">Saveurs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="cart-icon" id="cartBtn">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+</nav>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay">
+  <div class="cart-drawer">
+    <div class="cart-header"><h3>🛒 Votre panier</h3><button class="close-cart" id="closeCartBtn">✕</button></div>
+    <div class="cart-items" id="cartItemsList"><div class="empty-cart-msg">🍃 Votre panier est vide</div></div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>Total</span><span id="cartTotal">0 د.م.</span></div>
+      <button class="whatsapp-btn" id="whatsappOrderBtn">📱 Commander via WhatsApp</button>
+      <button class="checkout-btn" id="checkoutBtn">Payer (simulation)</button>
+    </div>
+  </div>
+</div>
+
+<!-- HERO SECTION (image remplacée) -->
+<section id="hero" class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="badge">✦ Nouvelle Collection Été</div>
+    <h1>Trouvez votre<br><em>parfaite</em> douceur glacée</h1>
+    <p class="hero-desc">Artisanale, chaque boule raconte une histoire — ingrédients nobles et passion.</p>
+    <div class="price-row"><span class="price-main">69 د.م.</span><span class="price-old">85 د.م.</span><span class="price-discount">-19%</span></div>
+    <div class="qty-row"><span>Quantité :</span><div class="qty-ctrl"><button class="qty-btn" id="decrQty">−</button><span class="qty-num" id="qtyValue">1</span><button class="qty-btn" id="incrQty">+</button></div></div>
+    <div class="cta-group"><button class="btn-primary" id="heroAddBtn">✨ Ajouter au panier</button><button class="btn-outline" id="scrollToProducts">Découvrir les saveurs →</button></div>
+  </div>
+  <div class="hero-visual">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=600&q=80" alt="Glace premium" onerror="this.src='https://images.unsplash.com/photo-1567206563114-c179706e6b3d?w=600&q=80'">
+  </div>
+</section>
+
+<!-- PRODUCTS SECTION -->
+<section id="products" class="products">
+  <div class="section-title">Nos <span>signatures</span></div>
+  <div class="card-grid" id="productGrid"></div>
+</section>
+
+<footer>❄️ Glacé — Marrakech, Maroc ❄️ <br>Artisanat glacé depuis 2025</footer>
+
 <script>
-  // ---------- produits ----------
-  const products = [
-    { id: 'choco', name: 'Chocolat Belge', price: 55, img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&q=80' },
-    { id: 'fraise', name: 'Fraise Sauvage', price: 50, img: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?w=400&q=80' },
-    { id: 'vanille', name: 'Vanille Madagascar', price: 48, img: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400&q=80' }
-  ];
+  (function() {
+    // -------- hide loader after 1 sec --------
+    const loader = document.getElementById('loader');
+    setTimeout(() => loader.classList.add('hide'), 1000);
 
-  // ---------- fonctions panier (localStorage) ----------
-  let cart = [];
-  function loadCart() {
-    const saved = localStorage.getItem('glace_cart');
-    if (saved) try { cart = JSON.parse(saved); } catch(e) { cart = []; }
-    else cart = [];
-    updateCartCounter();
-  }
-  function saveCart() {
-    localStorage.setItem('glace_cart', JSON.stringify(cart));
-  }
-  function updateCartCounter() {
-    const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const countSpan = document.getElementById('cartCount');
-    if (countSpan) countSpan.innerText = total;
-  }
-  function addToCart(product, qty = 1) {
-    const existing = cart.find(p => p.id === product.id);
-    if (existing) existing.quantity += qty;
-    else cart.push({ ...product, quantity: qty });
-    saveCart();
-    updateCartCounter();
-    showToast(`${product.name} ajouté`);
-  }
-  function showToast(msg) {
-    const toast = document.getElementById('toastMsg');
-    toast.innerText = '✓ ' + msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
-  }
+    // -------- products data --------
+    const products = [
+      { id: 'choco', name: 'Chocolat Belge', price: 55, img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&q=80' },
+      { id: 'fraise', name: 'Fraise Sauvage', price: 50, img: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?w=400&q=80' },
+      { id: 'vanille', name: 'Vanille Madagascar', price: 48, img: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400&q=80' }
+    ];
 
-  // عرض المنتجات في الشبكة
-  const grid = document.getElementById('productGrid');
-  if (grid) {
+    // -------- CART state (localStorage) --------
+    let cart = [];
+    function loadCart() {
+      const saved = localStorage.getItem('glace_cart');
+      if (saved) try { cart = JSON.parse(saved); } catch(e) { cart = []; }
+      else cart = [];
+      updateCartUI();
+    }
+    function saveCart() { localStorage.setItem('glace_cart', JSON.stringify(cart)); }
+    function updateCartUI() {
+      const badge = document.getElementById('cartCount');
+      const container = document.getElementById('cartItemsList');
+      const totalSpan = document.getElementById('cartTotal');
+      let totalItems = 0, totalPrice = 0;
+      cart.forEach(item => {
+        totalItems += item.quantity;
+        totalPrice += item.price * item.quantity;
+      });
+      if (badge) badge.innerText = totalItems;
+      if (totalSpan) totalSpan.innerText = totalPrice + ' د.م.';
+      if (!container) return;
+      if (cart.length === 0) {
+        container.innerHTML = '<div class="empty-cart-msg">🍃 Votre panier est vide</div>';
+        return;
+      }
+      let html = '';
+      cart.forEach((item, idx) => {
+        html += `
+          <div class="cart-item">
+            <div><strong>${escapeHtml(item.name)}</strong><br>${item.price} د.م.</div>
+            <div class="cart-item-controls">
+              <button class="cart-qty-btn" data-index="${idx}" data-delta="-1">−</button>
+              <span>${item.quantity}</span>
+              <button class="cart-qty-btn" data-index="${idx}" data-delta="1">+</button>
+              <button class="cart-remove" data-index="${idx}">🗑️</button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+      // attach events
+      document.querySelectorAll('.cart-qty-btn').forEach(btn => {
+        btn.onclick = (e) => {
+          const idx = parseInt(btn.dataset.index);
+          const delta = parseInt(btn.dataset.delta);
+          if (cart[idx]) {
+            let newQty = cart[idx].quantity + delta;
+            if (newQty <= 0) cart.splice(idx, 1);
+            else cart[idx].quantity = newQty;
+            saveCart();
+            updateCartUI();
+            showToast('Panier mis à jour');
+          }
+        };
+      });
+      document.querySelectorAll('.cart-remove').forEach(btn => {
+        btn.onclick = () => {
+          const idx = parseInt(btn.dataset.index);
+          cart.splice(idx, 1);
+          saveCart();
+          updateCartUI();
+          showToast('Article retiré');
+        };
+      });
+    }
+    function addToCart(product, quantity = 1) {
+      const existing = cart.find(p => p.id === product.id);
+      if (existing) existing.quantity += quantity;
+      else cart.push({ ...product, quantity });
+      saveCart();
+      updateCartUI();
+      showToast(`${product.name} ajouté (x${quantity})`);
+    }
+    function showToast(msg) {
+      const toast = document.getElementById('toastMsg');
+      toast.innerText = '✓ ' + msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+    function escapeHtml(str) {
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    // ---------- CART DRAWER ----------
+    const cartBtn = document.getElementById('cartBtn');
+    const overlay = document.getElementById('cartOverlay');
+    const closeCart = document.getElementById('closeCartBtn');
+    function openCart() { overlay.classList.add('open'); }
+    function closeCartFunc() { overlay.classList.remove('open'); }
+    cartBtn.onclick = openCart;
+    closeCart.onclick = closeCartFunc;
+    overlay.onclick = (e) => { if (e.target === overlay) closeCartFunc(); };
+
+    // ---------- MAIN PRODUCT QUANTITY ----------
+    let mainQty = 1;
+    const qtySpan = document.getElementById('qtyValue');
+    document.getElementById('decrQty').onclick = () => { if (mainQty > 1) { mainQty--; qtySpan.innerText = mainQty; } };
+    document.getElementById('incrQty').onclick = () => { if (mainQty < 20) { mainQty++; qtySpan.innerText = mainQty; } };
+    document.getElementById('heroAddBtn').onclick = () => {
+      addToCart({ id: 'main', name: 'Glacé Signature', price: 69 }, mainQty);
+    };
+
+    // ---------- PRODUCT CARDS ----------
+    const grid = document.getElementById('productGrid');
     products.forEach(prod => {
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
-        <img src="${prod.img}" alt="${prod.name}" loading="lazy">
+        <div class="card-img"><img src="${prod.img}" alt="${prod.name}" loading="lazy"></div>
         <div class="card-info">
-          <div><strong>${prod.name}</strong><br>${prod.price} د.م.</div>
-          <button class="add-btn" data-id="${prod.id}" data-name="${prod.name}" data-price="${prod.price}">+</button>
+          <div><h3>${prod.name}</h3><div class="card-price">${prod.price} د.م.</div></div>
+          <button class="add-card" data-id="${prod.id}" data-name="${prod.name}" data-price="${prod.price}">+</button>
         </div>
       `;
       grid.appendChild(card);
     });
-    document.querySelectorAll('.add-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+    document.querySelectorAll('.add-card').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
         const id = btn.dataset.id;
         const name = btn.dataset.name;
         const price = parseInt(btn.dataset.price);
         addToCart({ id, name, price }, 1);
+      };
+    });
+
+    // ---------- SCROLL TO PRODUCTS ----------
+    document.getElementById('scrollToProducts').onclick = () => {
+      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // ---------- WHATSAPP ORDER (intégration) ----------
+    const whatsappBtn = document.getElementById('whatsappOrderBtn');
+    whatsappBtn.onclick = () => {
+      if (cart.length === 0) {
+        showToast('Votre panier est vide');
+        return;
+      }
+      let orderDetails = "🍦 *Commande Glacé* 🍦\n";
+      let total = 0;
+      cart.forEach(item => {
+        orderDetails += `• ${item.name} x${item.quantity} → ${item.price * item.quantity} د.م.\n`;
+        total += item.price * item.quantity;
       });
-    });
-  }
+      orderDetails += `\n💰 *Total : ${total} د.م.*\n\nMerci de confirmer votre commande.`;
+      const encodedMsg = encodeURIComponent(orderDetails);
+      // Remplacer le numéro par votre numéro WhatsApp (ex: 212600000000)
+      const phoneNumber = "212612345678"; // exemple Maroc, à modifier
+      window.open(`https://wa.me/${phoneNumber}?text=${encodedMsg}`, '_blank');
+    };
 
-  // produit principal
-  const heroBtn = document.getElementById('heroAddBtn');
-  if (heroBtn) {
-    heroBtn.addEventListener('click', () => {
-      addToCart({ id: 'main', name: 'Glacé Signature', price: 69 }, 1);
-    });
-  }
+    // ---------- CHECKOUT SIMULATION ----------
+    document.getElementById('checkoutBtn').onclick = () => {
+      if (cart.length === 0) showToast('Panier vide');
+      else showToast('Merci ! Commande simulée');
+    };
 
-  loadCart();
+    // ---------- NAVBAR SCROLL ----------
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (window.scrollY > 30) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    });
+
+    loadCart();
+  })();
 </script>
 </body>
 </html>
