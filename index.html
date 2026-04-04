@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Glacé | Crème Glacée Artisanale</title>
+  <title>Glacé | آيس كريم فاخر</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* ========== RESET & VARIABLES ========== */
@@ -20,12 +20,9 @@
       --neon-pink: #FF6B6B;
       --neon-orange: #FF8E53;
       --neon-gold: #FFD166;
-      --neon-green: #06D6A0;
-      --purple-glow: #7B2CBF;
       --text-white: #FFFFFF;
       --text-light: #B8B8D0;
       --shadow-neon: 0 0 15px rgba(255, 107, 107, 0.3);
-      --shadow-glow: 0 0 20px rgba(255, 141, 83, 0.4);
       --transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
 
@@ -141,7 +138,7 @@
       content: '';
       position: absolute;
       bottom: -6px;
-      left: 0;
+      right: 0;
       width: 0%;
       height: 2px;
       background: var(--neon-pink);
@@ -200,19 +197,19 @@
     .cart-drawer {
       position: fixed;
       top: 0;
-      right: -100%;
+      left: -100%;
       width: min(460px, 90vw);
       height: 100%;
       background: var(--bg-card);
       z-index: 2001;
       display: flex;
       flex-direction: column;
-      transition: right 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-      box-shadow: -8px 0 30px rgba(0,0,0,0.5);
-      border-left: 1px solid var(--neon-pink);
+      transition: left 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: 8px 0 30px rgba(0,0,0,0.5);
+      border-right: 1px solid var(--neon-pink);
     }
     .cart-overlay.open .cart-drawer {
-      right: 0;
+      left: 0;
     }
     .cart-header {
       padding: 1.5rem;
@@ -254,7 +251,7 @@
       border: 1px solid rgba(255, 107, 107, 0.15);
     }
     @keyframes slideIn {
-      from { opacity: 0; transform: translateX(20px); }
+      from { opacity: 0; transform: translateX(-20px); }
       to { opacity: 1; transform: translateX(0); }
     }
     .cart-item-controls {
@@ -559,7 +556,7 @@
       opacity: 1;
     }
 
-    /* ========== FOOTER REDESIGN COMPLET ========== */
+    /* ========== FOOTER ========== */
     .new-footer {
       background: linear-gradient(180deg, #0D0B1A 0%, #1A163B 100%);
       position: relative;
@@ -667,7 +664,7 @@
       content: '';
       position: absolute;
       bottom: -6px;
-      left: 0;
+      right: 0;
       width: 40px;
       height: 2px;
       background: linear-gradient(90deg, #FF6B6B, #FF8E53);
@@ -691,7 +688,7 @@
 
     .footer-column ul li a:hover {
       color: #FF6B6B;
-      padding-left: 5px;
+      padding-right: 5px;
     }
 
     .contact-list li {
@@ -807,6 +804,7 @@
       }
       .footer-column h4::after {
         left: 50%;
+        right: auto;
         transform: translateX(-50%);
       }
       .footer-social {
@@ -831,15 +829,15 @@
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toastMsg">✓ Ajouté</div>
+<div class="toast" id="toastMsg">✓ تمت الإضافة</div>
 
 <!-- NAVBAR -->
 <nav id="navbar">
   <a href="#" class="logo">Glac<span>é</span></a>
   <ul class="nav-links">
-    <li><a href="#hero">Accueil</a></li>
-    <li><a href="#products">Saveurs</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#hero">الرئيسية</a></li>
+    <li><a href="#products">النكهات</a></li>
+    <li><a href="#contact">اتصل بنا</a></li>
   </ul>
   <button class="cart-icon" id="cartBtn">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
@@ -850,12 +848,12 @@
 <!-- CART DRAWER -->
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart-drawer">
-    <div class="cart-header"><h3>🛒 Votre panier</h3><button class="close-cart" id="closeCartBtn">✕</button></div>
-    <div class="cart-items" id="cartItemsList"><div class="empty-cart-msg">🍃 Votre panier est vide</div></div>
+    <div class="cart-header"><h3>🛒 سلة التسوق</h3><button class="close-cart" id="closeCartBtn">✕</button></div>
+    <div class="cart-items" id="cartItemsList"><div class="empty-cart-msg">🍃 سلة التسوق فارغة</div></div>
     <div class="cart-footer">
-      <div class="cart-total"><span>Total</span><span id="cartTotal">0 د.م.</span></div>
-      <button class="whatsapp-btn" id="whatsappOrderBtn">📱 Commander via WhatsApp</button>
-      <button class="checkout-btn" id="checkoutBtn">Payer (simulation)</button>
+      <div class="cart-total"><span>المجموع</span><span id="cartTotal">0 د.م.</span></div>
+      <button class="whatsapp-btn" id="whatsappOrderBtn">📱 طلب عبر واتساب</button>
+      <button class="checkout-btn" id="checkoutBtn">إتمام الشراء (محاكاة)</button>
     </div>
   </div>
 </div>
@@ -864,25 +862,25 @@
 <section id="hero" class="hero">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <div class="badge">✦ Nouvelle Collection Été</div>
-    <h1>Trouvez votre<br><em>parfaite</em> douceur glacée</h1>
-    <p class="hero-desc">Artisanale, chaque boule raconte une histoire — ingrédients nobles et passion.</p>
+    <div class="badge">✦ تشكيلة الصيف الجديدة</div>
+    <h1>ابحث عن<br><em>نكهتك المثالية</em> من الآيس كريم</h1>
+    <p class="hero-desc">حرفية باستخدام أفضل المكونات في العالم. كل ملعقة هي رحلة — من أول قضمة إلى الأخيرة.</p>
     <div class="price-row"><span class="price-main">69 د.م.</span><span class="price-old">85 د.م.</span><span class="price-discount">-19%</span></div>
-    <div class="qty-row"><span>Quantité :</span><div class="qty-ctrl"><button class="qty-btn" id="decrQty">−</button><span class="qty-num" id="qtyValue">1</span><button class="qty-btn" id="incrQty">+</button></div></div>
-    <div class="cta-group"><button class="btn-primary" id="heroAddBtn">✨ Ajouter au panier</button><button class="btn-outline" id="scrollToProducts">Découvrir les saveurs →</button></div>
+    <div class="qty-row"><span>الكمية :</span><div class="qty-ctrl"><button class="qty-btn" id="decrQty">−</button><span class="qty-num" id="qtyValue">1</span><button class="qty-btn" id="incrQty">+</button></div></div>
+    <div class="cta-group"><button class="btn-primary" id="heroAddBtn">✨ أضف إلى السلة</button><button class="btn-outline" id="scrollToProducts">اكتشف النكهات ←</button></div>
   </div>
   <div class="hero-visual">
     <img class="hero-img" src="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=600&q=80" alt="Glace premium" onerror="this.src='https://images.unsplash.com/photo-1567206563114-c179706e6b3d?w=600&q=80'">
   </div>
 </section>
 
-<!-- PRODUCTS SECTION -->
+<!-- PRODUCTS SECTION (أسماء الآيس كريم بالإنجليزية) -->
 <section id="products" class="products">
-  <div class="section-title">Nos <span>signatures</span></div>
+  <div class="section-title">نكهاتنا <span>الحصرية</span></div>
   <div class="card-grid" id="productGrid"></div>
 </section>
 
-<!-- ========== NOUVEAU FOOTER (AJOUTÉ À LA FIN) ========== -->
+<!-- FOOTER -->
 <footer class="new-footer">
   <div class="footer-wave">
     <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
@@ -903,7 +901,7 @@
         <span class="footer-logo-icon">🍦</span>
         <span>Glac<span>é</span></span>
       </div>
-      <p class="footer-desc">Artisan glacier depuis 2025. Des saveurs uniques, des ingrédients d'exception.</p>
+      <p class="footer-desc">آيس كريم حرفي منذ 2025. نكهات فريدة، مكونات استثنائية.</p>
       <div class="footer-social">
         <a href="#" class="social-icon">📘</a>
         <a href="#" class="social-icon">📷</a>
@@ -913,254 +911,14 @@
     </div>
 
     <div class="footer-column">
-      <h4>Navigation</h4>
+      <h4>روابط سريعة</h4>
       <ul>
-        <li><a href="#hero">Accueil</a></li>
-        <li><a href="#products">Nos saveurs</a></li>
-        <li><a href="#">Notre histoire</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="#hero">الرئيسية</a></li>
+        <li><a href="#products">نكهاتنا</a></li>
+        <li><a href="#">قصتنا</a></li>
+        <li><a href="#">اتصل بنا</a></li>
       </ul>
     </div>
 
     <div class="footer-column">
-      <h4>Informations</h4>
-      <ul>
-        <li><a href="#">Livraison</a></li>
-        <li><a href="#">Politique de retour</a></li>
-        <li><a href="#">CGV</a></li>
-        <li><a href="#">FAQ</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-column">
-      <h4>Contact</h4>
-      <ul class="contact-list">
-        <li>📍 Marrakech, Maroc</li>
-        <li>📞 +212 5XX XXX XXX</li>
-        <li>✉️ hello@glace.ma</li>
-      </ul>
-      <div class="newsletter">
-        <input type="email" placeholder="Votre email" id="newsletterEmail">
-        <button id="newsletterBtn">📧</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>&copy; 2025 Glacé — Crème glacée artisanale. Tous droits réservés.</p>
-    <button class="back-to-top" id="backToTopBtn">↑</button>
-  </div>
-</footer>
-
-<script>
-  (function() {
-    // -------- hide loader --------
-    const loader = document.getElementById('loader');
-    setTimeout(() => loader.classList.add('hide'), 1000);
-
-    // -------- products data --------
-    const products = [
-      { id: 'choco', name: 'Chocolat Belge', price: 55, img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&q=80' },
-      { id: 'fraise', name: 'Fraise Sauvage', price: 50, img: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?w=400&q=80' },
-      { id: 'vanille', name: 'Vanille Madagascar', price: 48, img: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400&q=80' }
-    ];
-
-    // -------- CART state --------
-    let cart = [];
-    function loadCart() {
-      const saved = localStorage.getItem('glace_cart');
-      if (saved) try { cart = JSON.parse(saved); } catch(e) { cart = []; }
-      else cart = [];
-      updateCartUI();
-    }
-    function saveCart() { localStorage.setItem('glace_cart', JSON.stringify(cart)); }
-    function updateCartUI() {
-      const badge = document.getElementById('cartCount');
-      const container = document.getElementById('cartItemsList');
-      const totalSpan = document.getElementById('cartTotal');
-      let totalItems = 0, totalPrice = 0;
-      cart.forEach(item => {
-        totalItems += item.quantity;
-        totalPrice += item.price * item.quantity;
-      });
-      if (badge) badge.innerText = totalItems;
-      if (totalSpan) totalSpan.innerText = totalPrice + ' د.م.';
-      if (!container) return;
-      if (cart.length === 0) {
-        container.innerHTML = '<div class="empty-cart-msg">🍃 Votre panier est vide</div>';
-        return;
-      }
-      let html = '';
-      cart.forEach((item, idx) => {
-        html += `
-          <div class="cart-item">
-            <div><strong>${escapeHtml(item.name)}</strong><br>${item.price} د.م.</div>
-            <div class="cart-item-controls">
-              <button class="cart-qty-btn" data-index="${idx}" data-delta="-1">−</button>
-              <span>${item.quantity}</span>
-              <button class="cart-qty-btn" data-index="${idx}" data-delta="1">+</button>
-              <button class="cart-remove" data-index="${idx}">🗑️</button>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-      document.querySelectorAll('.cart-qty-btn').forEach(btn => {
-        btn.onclick = (e) => {
-          const idx = parseInt(btn.dataset.index);
-          const delta = parseInt(btn.dataset.delta);
-          if (cart[idx]) {
-            let newQty = cart[idx].quantity + delta;
-            if (newQty <= 0) cart.splice(idx, 1);
-            else cart[idx].quantity = newQty;
-            saveCart();
-            updateCartUI();
-            showToast('Panier mis à jour');
-          }
-        };
-      });
-      document.querySelectorAll('.cart-remove').forEach(btn => {
-        btn.onclick = () => {
-          const idx = parseInt(btn.dataset.index);
-          cart.splice(idx, 1);
-          saveCart();
-          updateCartUI();
-          showToast('Article retiré');
-        };
-      });
-    }
-    function addToCart(product, quantity = 1) {
-      const existing = cart.find(p => p.id === product.id);
-      if (existing) existing.quantity += quantity;
-      else cart.push({ ...product, quantity });
-      saveCart();
-      updateCartUI();
-      showToast(`${product.name} ajouté (x${quantity})`);
-    }
-    function showToast(msg) {
-      const toast = document.getElementById('toastMsg');
-      toast.innerText = '✓ ' + msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2000);
-    }
-    function escapeHtml(str) {
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-      });
-    }
-
-    // Cart drawer
-    const cartBtn = document.getElementById('cartBtn');
-    const overlay = document.getElementById('cartOverlay');
-    const closeCart = document.getElementById('closeCartBtn');
-    cartBtn.onclick = () => overlay.classList.add('open');
-    closeCart.onclick = () => overlay.classList.remove('open');
-    overlay.onclick = (e) => { if (e.target === overlay) overlay.classList.remove('open'); };
-
-    // Main product quantity
-    let mainQty = 1;
-    const qtySpan = document.getElementById('qtyValue');
-    document.getElementById('decrQty').onclick = () => { if (mainQty > 1) { mainQty--; qtySpan.innerText = mainQty; } };
-    document.getElementById('incrQty').onclick = () => { if (mainQty < 20) { mainQty++; qtySpan.innerText = mainQty; } };
-    document.getElementById('heroAddBtn').onclick = () => {
-      addToCart({ id: 'main', name: 'Glacé Signature', price: 69 }, mainQty);
-    };
-
-    // Product cards
-    const grid = document.getElementById('productGrid');
-    products.forEach(prod => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="card-img"><img src="${prod.img}" alt="${prod.name}" loading="lazy"></div>
-        <div class="card-info">
-          <div><h3>${prod.name}</h3><div class="card-price">${prod.price} د.م.</div></div>
-          <button class="add-card" data-id="${prod.id}" data-name="${prod.name}" data-price="${prod.price}">+</button>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-    document.querySelectorAll('.add-card').forEach(btn => {
-      btn.onclick = (e) => {
-        e.stopPropagation();
-        const id = btn.dataset.id;
-        const name = btn.dataset.name;
-        const price = parseInt(btn.dataset.price);
-        addToCart({ id, name, price }, 1);
-      };
-    });
-
-    // Scroll
-    document.getElementById('scrollToProducts').onclick = () => {
-      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-    };
-
-    // WhatsApp order
-    document.getElementById('whatsappOrderBtn').onclick = () => {
-      if (cart.length === 0) { showToast('Votre panier est vide'); return; }
-      let orderDetails = "🍦 *Commande Glacé* 🍦\n\n";
-      let total = 0;
-      cart.forEach(item => {
-        orderDetails += `• ${item.name} x${item.quantity} → ${item.price * item.quantity} د.م.\n`;
-        total += item.price * item.quantity;
-      });
-      orderDetails += `\n💰 *Total : ${total} د.م.*\n\nMerci de confirmer votre commande.`;
-      const encoded = encodeURIComponent(orderDetails);
-      window.open(`https://wa.me/212612345678?text=${encoded}`, '_blank');
-    };
-
-    // Checkout
-    document.getElementById('checkoutBtn').onclick = () => {
-      if (cart.length === 0) showToast('Panier vide');
-      else showToast('Merci ! Commande simulée');
-    };
-
-    // Navbar scroll
-    window.addEventListener('scroll', () => {
-      const nav = document.getElementById('navbar');
-      if (window.scrollY > 30) nav.classList.add('scrolled');
-      else nav.classList.remove('scrolled');
-    });
-
-    // ========== FONCTIONS DU NOUVEAU FOOTER ==========
-    const newsletterBtn = document.getElementById('newsletterBtn');
-    if (newsletterBtn) {
-      newsletterBtn.addEventListener('click', () => {
-        const emailInput = document.getElementById('newsletterEmail');
-        const email = emailInput.value.trim();
-        if (email && email.includes('@')) {
-          showToast('Merci pour votre inscription ! ✨');
-          emailInput.value = '';
-        } else {
-          showToast('Veuillez entrer un email valide');
-        }
-      });
-    }
-
-    const backToTopBtn = document.getElementById('backToTopBtn');
-    if (backToTopBtn) {
-      backToTopBtn.style.transition = '0.3s';
-      backToTopBtn.style.opacity = '0';
-      backToTopBtn.style.visibility = 'hidden';
-      backToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-          backToTopBtn.style.opacity = '1';
-          backToTopBtn.style.visibility = 'visible';
-        } else {
-          backToTopBtn.style.opacity = '0';
-          backToTopBtn.style.visibility = 'hidden';
-        }
-      });
-    }
-
-    loadCart();
-  })();
-</script>
-</body>
-</html>
+      <h4>معلومات</h4>
