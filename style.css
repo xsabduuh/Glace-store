@@ -1,4 +1,4 @@
-/* ========== RESET & VARIABLES ========== */
+/* ========== RESET & VARIABLES (ألوان جديدة) ========== */
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +6,8 @@
 }
 
 :root {
-  --bg: #FFF8F0;
+  --bg-gradient: linear-gradient(135deg, #FFF8F0 0%, #FEE8E0 100%);
+  --bg-card: #FFFFFF;
   --soft-pink: #FCE4DB;
   --rose: #E56A4F;
   --rose-deep: #C9442C;
@@ -14,7 +15,6 @@
   --choc-light: #5C3E2E;
   --text-light: #8E6E5A;
   --gold: #E9C46A;
-  --white-soft: rgba(255, 255, 255, 0.92);
   --shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
   --shadow-hover: 0 25px 45px rgba(62, 42, 33, 0.15);
   --transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
@@ -22,7 +22,7 @@
 
 body {
   font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
+  background: var(--bg-gradient);
   color: var(--choc);
   overflow-x: hidden;
 }
@@ -148,10 +148,10 @@ nav.scrolled {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--bg);
+  border: 2px solid var(--bg-card);
 }
 
-/* ========== CART DRAWER (ANIMÉ) ========== */
+/* ========== CART DRAWER ========== */
 .cart-overlay {
   position: fixed;
   inset: 0;
@@ -172,7 +172,7 @@ nav.scrolled {
   right: -100%;
   width: min(460px, 90vw);
   height: 100%;
-  background: var(--bg);
+  background: var(--bg-card);
   z-index: 2001;
   display: flex;
   flex-direction: column;
@@ -207,7 +207,7 @@ nav.scrolled {
   padding: 1rem;
 }
 .cart-item {
-  background: white;
+  background: #fefaf5;
   border-radius: 24px;
   padding: 0.9rem;
   margin-bottom: 0.9rem;
@@ -248,7 +248,7 @@ nav.scrolled {
 .cart-footer {
   padding: 1.2rem;
   border-top: 1px solid rgba(0,0,0,0.08);
-  background: var(--bg);
+  background: #fefaf5;
 }
 .cart-total {
   display: flex;
@@ -291,7 +291,7 @@ nav.scrolled {
   color: var(--text-light);
 }
 
-/* ========== HERO SECTION ========== */
+/* ========== HERO SECTION (خلفية جديدة) ========== */
 .hero {
   min-height: 100vh;
   display: grid;
@@ -304,9 +304,9 @@ nav.scrolled {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 70% 60% at 30% 30%, var(--soft-pink) 0%, transparent 65%),
-              radial-gradient(ellipse 40% 40% at 85% 70%, #C8EAD9 0%, transparent 55%);
-  opacity: 0.6;
+  background: radial-gradient(ellipse 70% 60% at 30% 30%, #FCE4DB 0%, transparent 65%),
+              radial-gradient(ellipse 40% 40% at 85% 70%, #D4F1F0 0%, transparent 55%);
+  opacity: 0.8;
   z-index: 0;
 }
 .hero-content {
@@ -427,6 +427,7 @@ nav.scrolled {
 /* ========== PRODUCTS SECTION ========== */
 .products {
   padding: 4rem 6vw;
+  background: transparent;
 }
 .section-title {
   text-align: center;
@@ -443,7 +444,7 @@ nav.scrolled {
   margin: 0 auto;
 }
 .card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 32px;
   overflow: hidden;
   box-shadow: var(--shadow);
@@ -494,7 +495,7 @@ footer {
   color: rgba(255,255,255,0.6);
 }
 
-/* ========== TOAST NOTIFICATION ========== */
+/* ========== TOAST ========== */
 .toast {
   position: fixed;
   bottom: 2rem;
