@@ -1,4 +1,81 @@
-<!-- ========== قسم من نحن (About Us) ========== -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Glacé – آيس كريم فاخر. نكهات طبيعية وحرفية عالية الجودة. اطلب الآن عبر واتساب.">
+  <meta name="keywords" content="آيس كريم, جلاسي, مثلجات, حلويات, مراكش">
+  <meta name="author" content="Glacé">
+  <meta name="theme-color" content="#0D0B1A">
+  <title>Glacé | آيس كريم فاخر</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- شاشة التحميل -->
+<div id="loader">
+  <div class="loader-logo">Glacé</div>
+  <div class="loader-spinner"></div>
+  <button class="skip-loader-btn" id="skipLoaderBtn">تخطي →</button>
+</div>
+
+<!-- إشعار توست -->
+<div class="toast" id="toastMsg">✓ تمت الإضافة</div>
+
+<!-- شريط التنقل -->
+<nav id="navbar">
+  <a href="#" class="logo">Glac<span>é</span></a>
+  <ul class="nav-links">
+    <li><a href="#hero">الرئيسية</a></li>
+    <li><a href="#products">النكهات</a></li>
+    <li><a href="#about">من نحن</a></li>
+    <li><a href="#contact">اتصل بنا</a></li>
+  </ul>
+  <button class="cart-icon" id="cartBtn" aria-label="سلة التسوق">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/>
+    </svg>
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+</nav>
+
+<!-- السلة الجانبية -->
+<div class="cart-overlay" id="cartOverlay">
+  <div class="cart-drawer">
+    <div class="cart-header"><h3>🛒 سلة التسوق</h3><button class="close-cart" id="closeCartBtn">✕</button></div>
+    <div class="cart-items" id="cartItemsList"><div class="empty-cart-msg">🍃 سلة التسوق فارغة</div></div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>المجموع</span><span id="cartTotal">0 د.م.</span></div>
+      <button class="whatsapp-btn" id="whatsappOrderBtn">📱 طلب عبر واتساب</button>
+      <button class="checkout-btn" id="checkoutBtn">إتمام الشراء</button>
+    </div>
+  </div>
+</div>
+
+<!-- القسم الرئيسي (Hero) -->
+<section id="hero" class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="badge">✦ تشكيلة الصيف الجديدة</div>
+    <h1>ابحث عن<br><em>نكهتك المثالية</em> من الآيس كريم</h1>
+    <p class="hero-desc">حرفية باستخدام أفضل المكونات في العالم. كل ملعقة هي رحلة — من أول قضمة إلى الأخيرة.</p>
+    <div class="price-row"><span class="price-main">69 د.م.</span><span class="price-old">85 د.م.</span><span class="price-discount">-19%</span></div>
+    <div class="qty-row"><span>الكمية :</span><div class="qty-ctrl"><button class="qty-btn" id="decrQty">−</button><span class="qty-num" id="qtyValue">1</span><button class="qty-btn" id="incrQty">+</button></div></div>
+    <div class="cta-group"><button class="btn-primary" id="heroAddBtn">✨ أضف إلى السلة</button><button class="btn-outline" id="scrollToProducts">اكتشف النكهات ←</button></div>
+  </div>
+  <div class="hero-visual">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=600&q=80" alt="Glace premium" loading="eager">
+  </div>
+</section>
+
+<!-- قسم المنتجات -->
+<section id="products" class="products">
+  <div class="section-title">نكهاتنا <span>الحصرية</span></div>
+  <div class="card-grid" id="productGrid"></div>
+</section>
+
+<!-- قسم من نحن -->
 <section class="about-us" id="about">
   <div class="about-container">
     <div class="about-header">
@@ -6,63 +83,45 @@
       <h2>حكاية <span>شغف</span> بدأت منذ 2025</h2>
       <p>نصنع أسعد اللحظات بأجود أنواع الآيس كريم الطبيعي</p>
     </div>
-
     <div class="about-grid">
       <div class="about-image">
-        <img src="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=600&q=80" alt="مصنع الآيس كريم" class="about-img-main">
+        <img src="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=600&q=80" alt="مصنع الآيس كريم" class="about-img-main" loading="lazy">
         <div class="about-image-small">
-          <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=300&q=80" alt="تحضير الآيس كريم">
-          <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=300&q=80" alt="مكونات طبيعية">
+          <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=300&q=80" alt="تحضير الآيس كريم" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=300&q=80" alt="مكونات طبيعية" loading="lazy">
         </div>
       </div>
-
       <div class="about-content">
         <h3>نقدم لك تجربة <span class="highlight">فريدة</span> من نوعها</h3>
         <p>في Glacé، نؤمن أن الآيس كريم ليس مجرد حلوى، بل هو لحظة سعادة نصنعها لك بعناية وحب. نستخدم أفضل المكونات الطبيعية من أجود المصادر حول العالم، لنقدم لك نكهات استثنائية تأخذك في رحلة من المتعة.</p>
-        
         <div class="about-features">
-          <div class="feature">
-            <div class="feature-icon">🍦</div>
-            <div class="feature-text">
-              <h4>مكونات طبيعية 100%</h4>
-              <p>نختار بعناية أجود أنواع الحليب والفواكه الطبيعية</p>
-            </div>
-          </div>
-          <div class="feature">
-            <div class="feature-icon">👨‍🍳</div>
-            <div class="feature-text">
-              <h4>حرفية وخبرة</h4>
-              <p>فريق من أمهر صانعي الآيس كريم حول العالم</p>
-            </div>
-          </div>
-          <div class="feature">
-            <div class="feature-icon">❤️</div>
-            <div class="feature-text">
-              <h4>صنع بحب وشغف</h4>
-              <p>كل منتج نقدمه هو قطعة من شغفنا واهتمامنا</p>
-            </div>
-          </div>
+          <div class="feature"><div class="feature-icon">🍦</div><div class="feature-text"><h4>مكونات طبيعية 100%</h4><p>نختار بعناية أجود أنواع الحليب والفواكه الطبيعية</p></div></div>
+          <div class="feature"><div class="feature-icon">👨‍🍳</div><div class="feature-text"><h4>حرفية وخبرة</h4><p>فريق من أمهر صانعي الآيس كريم حول العالم</p></div></div>
+          <div class="feature"><div class="feature-icon">❤️</div><div class="feature-text"><h4>صنع بحب وشغف</h4><p>كل منتج نقدمه هو قطعة من شغفنا واهتمامنا</p></div></div>
         </div>
-
         <div class="about-stats">
-          <div class="stat">
-            <span class="stat-number">10+</span>
-            <span class="stat-label">سنوات خبرة</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">50+</span>
-            <span class="stat-label">نكهة مميزة</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">15k+</span>
-            <span class="stat-label">عميل سعيد</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">100%</span>
-            <span class="stat-label">طبيعي</span>
-          </div>
+          <div class="stat"><span class="stat-number">10+</span><span class="stat-label">سنوات خبرة</span></div>
+          <div class="stat"><span class="stat-number">50+</span><span class="stat-label">نكهة مميزة</span></div>
+          <div class="stat"><span class="stat-number">15k+</span><span class="stat-label">عميل سعيد</span></div>
+          <div class="stat"><span class="stat-number">100%</span><span class="stat-label">طبيعي</span></div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- تذييل الصفحة (Footer) -->
+<footer class="new-footer" id="contact">
+  <div class="footer-wave"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,32 C240,64 480,16 720,32 C960,48 1200,16 1440,32 L1440,80 L0,80 Z" fill="url(#footerGradient)"></path><defs><linearGradient id="footerGradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF6B6B" /><stop offset="50%" stop-color="#FF8E53" /><stop offset="100%" stop-color="#FFD166" /></linearGradient></defs></svg></div>
+  <div class="footer-container">
+    <div class="footer-column"><div class="footer-logo"><span class="footer-logo-icon">🍦</span><span>Glac<span>é</span></span></div><p class="footer-desc">آيس كريم حرفي منذ 2025. نكهات فريدة، مكونات استثنائية.</p><div class="footer-social"><a href="#" class="social-icon">📘</a><a href="#" class="social-icon">📷</a><a href="#" class="social-icon">🐦</a><a href="#" class="social-icon">🎵</a></div></div>
+    <div class="footer-column"><h4>روابط سريعة</h4><ul><li><a href="#hero">الرئيسية</a></li><li><a href="#products">نكهاتنا</a></li><li><a href="#about">من نحن</a></li><li><a href="#contact">اتصل بنا</a></li></ul></div>
+    <div class="footer-column"><h4>معلومات</h4><ul><li><a href="#">التوصيل</a></li><li><a href="#">سياسة الاسترجاع</a></li><li><a href="#">الشروط والأحكام</a></li><li><a href="#">الأسئلة الشائعة</a></li></ul></div>
+    <div class="footer-column"><h4>تواصل معنا</h4><ul class="contact-list"><li>📍 مراكش، المغرب</li><li>📞 +212 5XX XXX XXX</li><li>✉️ hello@glace.ma</li></ul><div class="newsletter"><input type="email" placeholder="بريدك الإلكتروني" id="newsletterEmail"><button id="newsletterBtn">📧</button></div></div>
+  </div>
+  <div class="footer-bottom"><p>&copy; 2025 Glacé — آيس كريم حرفي. جميع الحقوق محفوظة.</p><button class="back-to-top" id="backToTopBtn">↑</button></div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
